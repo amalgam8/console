@@ -1,0 +1,19 @@
+body {
+  margin-top: 60px;
+}
+
+i {
+  padding-right: 10px;
+}
+
+a {
+  cursor: pointer;
+}
+
+.lg-icon {
+  font-size: 1.5em;
+}
+
+.pad-left-10 {
+  padding-left: 10px;
+}
