@@ -51,7 +51,12 @@ $(document).ready(function(){
     };
     this.modifyRoutes = function() {
       this.selectors = this.selectors.trim();
-      var data = { service: this.selectedService.name, default_version: this.selectedVersion, version_selectors: this.selectors };
+      var data = { service: this.selectedService.name }
+      if (this.selectedVersion)
+        data.default_version = this.selectedVersion };
+      if (this.selectors)
+        data.version_selectors = this.selectors;
+
       var config = {
         url: '/api/v1/routes',
         method: 'post',
