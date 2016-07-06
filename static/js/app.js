@@ -1,5 +1,5 @@
 "use strict";
-var $http = window.axios;;
+var $http = window.axios;
 
 $(document).ready(function(){
   $http.defaults.headers.post['Content-Type'] = 'application/json';
@@ -35,27 +35,46 @@ $(document).ready(function(){
     ko.track(this);
   }
 
+  function Selector(s) {
+    this.rule = s;
+    this.toString = function() { return this.rule; }
+    ko.track(this);
+  }
+
   function viewModel() {
+    var self=this;
     this.services = [];
     this.selectedService = new Service();
     this.versions = [];
     this.selectedVersion = '';
-    this.selectors = '';
+    this.selectors = [];
+
+    this.addSelector = function() {
+      this.selectors.push(new Selector(''));
+    };
+
+    this.deleteSelector = function(s) {
+      this.selectors.remove(s);
+    }
 
     this.editRoutes = function(service) {
       this.selectedService = service;
       this.versions = getVersionOptions(service.versions);
       this.selectedVersion = service.defaultVersion;
-      this.selectors = service.versionSelectors;
+      this.selectors.removeAll();
+      service.versionSelectors.split(',').forEach(function(s) {
+          self.selectors.push(new Selector(s.trim()));
+      });
       $('#collapseRoutes').collapse('show');
     };
     this.modifyRoutes = function() {
-      this.selectors = this.selectors.trim();
+      var selectors = this.selectors.join(',').trim();
       var data = { service: this.selectedService.name }
       if (this.selectedVersion)
-        data.default_version = this.selectedVersion };
-      if (this.selectors)
-        data.version_selectors = this.selectors;
+        data.default_version = this.selectedVersion;
+
+      if (selectors)
+        data.version_selectors = selectors;
 
       var config = {
         url: '/api/v1/routes',
@@ -75,13 +94,12 @@ $(document).ready(function(){
     };
 
     ko.track(this);
-
-    var self = this;
+    //ko.applyBindings(this.selectors);
 
     function doPoll() {
-      console.log('polling...')
       $http.request({url: '/api/v1/services'}).then(function(res) {
         if (res.status !== 200) console.log(res);
+
         var services = []
         res.data.services.forEach(function(service) {
           services.push(new Service(service));

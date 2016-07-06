@@ -53,10 +53,18 @@
                       </div>
                   </div>
                   <div class="form-group">
-                    <label for="service-versionselectors" class="col-sm-2 control-label">Version Selectors</label>
-                    <div class="col-sm-10">
-                      <input type="text" id="service-versionselectors" class="form-control" name="selectors" value="{{ selectors }}">
-                      <span id="helpBlock" class="help-block">This is a comma separated list of <em>version selectors</em>. Each selector is in the form <em>version("rule")</em>, where <em>version</em> is the version name and <em>rule</em> is the comparison rule. See the <a class="text-info" href="https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md"><em>Amalgam8 README.md</em></a> for more information.</span>
+                    <div class="col-sm-2">
+                      <label for="service-versionselectors" class="control-label">Version Selectors</label>
+                      <button class="btn btn-info" data-bind="click: addSelector">Add Selector</button>
+                    </div>
+                    <div class="col-sm-8">
+                      <span id="helpBlock" class="help-block">Each selector is in the form <em>version("rule")</em>, where <em>version</em> is the version name and <em>rule</em> is the comparison rule. See the <a class="text-info" href="https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md"><em>Amalgam8 README.md</em></a> for more information.</span>
+                      <!-- ko foreach: selectors -->
+                      <div class="input-group service-versionselectors">
+                        <input type="text" class="form-control" name="selectors" data-bind="value: rule">
+                        <div class="input-group-addon" data-bind="click: $parent.deleteSelector"><i class="glyphicon glyphicon-trash"></i></div>
+                      </div>
+                      <!-- /ko -->
                     </div>
                   </div>
                   <div class="form-group">
@@ -102,7 +110,6 @@
               <td>{{ versionSelectors }}</td>
               <td>
                 <button type="button" class="btn btn-default" data-bind="click: $parent.editRoutes"><i class="glyphicon glyphicon-random"></i>Set Routes</button>
-                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-sort"></i>Control Traffic</button>
               </td>
             </tr>
             <!-- /ko -->

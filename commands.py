@@ -88,7 +88,6 @@ def a8_put(url, token, body, headers={'Accept': 'application/json', 'Content-typ
     """
     @type body: str
     """
-
     headers['Authorization'] = token
     if extra_headers:
         headers=dict(headers.items() + extra_headers.items())

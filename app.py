@@ -35,7 +35,9 @@ def post_route():
     args = settings
     args.service = payload["service"]
     args.default = payload["default_version"]
-    args.selectors = payload["version_selectors"].split(",")
+    if payload.get('version_selectors'):
+        args.selector = payload["version_selectors"].split(",")
+
     commands.set_routing(args)
     return "", 200
 
