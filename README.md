@@ -1,1 +1,1 @@
-#a8ui: The Amalgamate UI
+# console :: Amalgam8 Control Console UI Prototype
