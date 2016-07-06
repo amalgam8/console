@@ -35,10 +35,21 @@ $(document).ready(function(){
     ko.track(this);
   }
 
+  var SELECTORTYPES = ['User', 'Weighted %'];
   function Selector(s) {
     this.rule = s;
+    this.selectortypes = SELECTORTYPES;
+    this.selectorType = '';
+
+    if (this.rule.indexOf('user') !== -1) this.selectorType = 'User';
+    if (this.rule.indexOf('weight') !== -1) {
+      this.selectorType = 'Weighted %';
+      this.weight(0);
+    }
     this.toString = function() { return this.rule; }
     ko.track(this);
+
+    this.weight = ko.observable(0); // TODO: bug in ko-slider preventing using ES5 property. Force to observable
   }
 
   function viewModel() {
@@ -89,7 +100,7 @@ $(document).ready(function(){
     };
     this.cancelRoutes = function() {
       this.selectedVersion = this.selectedService.defaultVersion;
-      this.selectors = this.selectedService.versionSelectors;
+      this.selectors.removeAll();
       $('#collapseRoutes').collapse('hide');
     };
 
