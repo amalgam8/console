@@ -8,7 +8,11 @@ The a8 console is a python Flask application so you'll need python 2.7x and Flas
 
 ## Starting the console
 
-`python app.py`
+```
+export A8_CONTROLLER_URL=http://localhost:31200
+export A8_REGISTRY_URL=http://localhost:31300
+python app.py
+```
 
 You can access the console UI @ http://localhost:5000
 
