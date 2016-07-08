@@ -36,9 +36,28 @@ $(document).ready(function(){
   }
 
   function Selector(s) {
+    var re = /([a-zA-z].+)\((.+)=(.+)\)/i
+    var match = s.match(re);
+
     this.rule = s;
-    this.toString = function() { return this.rule; }
+    this.version = match ? match[1].trim().toLowerCase() : '';
+    this.type = match ? match[2].trim().toLowerCase() : '';
+    this.value = match ? match[3].trim().toLowerCase() : '';
+
     ko.track(this);
+
+    // elements that do not need to be tracked as observables
+    this.toString = function() {
+      if (this.type === 'weight') this.value = (this.weight() / 100).toPrecision(2);
+      this.createRule();
+      return this.rule;
+    };
+
+    this.createRule = function() {
+      this.rule = this.version + "(" + this.type + "=" + this.value + ")";
+    };
+
+    this.weight = ko.observable(this.value * 100); // TODO: bug in ko-slider preventing using ES5 property. Force to observable
   }
 
   function viewModel() {
@@ -67,6 +86,8 @@ $(document).ready(function(){
       });
       $('#collapseRoutes').collapse('show');
     };
+
+    // TODO - add error checking for non-selected version, no value field, etc.
     this.modifyRoutes = function() {
       var selectors = this.selectors.join(',').trim();
       var data = { service: this.selectedService.name }
@@ -89,12 +110,14 @@ $(document).ready(function(){
     };
     this.cancelRoutes = function() {
       this.selectedVersion = this.selectedService.defaultVersion;
-      this.selectors = this.selectedService.versionSelectors;
+      this.selectors.removeAll();
       $('#collapseRoutes').collapse('hide');
     };
 
     ko.track(this);
-    //ko.applyBindings(this.selectors);
+
+    // elements that don't need to be tracked as observables
+    this.SELECTORTYPES = ['user', 'weight'];
 
     function doPoll() {
       $http.request({url: '/api/v1/services'}).then(function(res) {
