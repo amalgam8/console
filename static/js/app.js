@@ -35,21 +35,29 @@ $(document).ready(function(){
     ko.track(this);
   }
 
-  var SELECTORTYPES = ['User', 'Weighted %'];
   function Selector(s) {
-    this.rule = s;
-    this.selectortypes = SELECTORTYPES;
-    this.selectorType = '';
+    var re = /([a-zA-z].+)\((.+)=(.+)\)/i
+    var match = s.match(re);
 
-    if (this.rule.indexOf('user') !== -1) this.selectorType = 'User';
-    if (this.rule.indexOf('weight') !== -1) {
-      this.selectorType = 'Weighted %';
-      this.weight(0);
-    }
-    this.toString = function() { return this.rule; }
+    this.rule = s;
+    this.version = match ? match[1].trim().toLowerCase() : '';
+    this.type = match ? match[2].trim().toLowerCase() : '';
+    this.value = match ? match[3].trim().toLowerCase() : '';
+
     ko.track(this);
 
-    this.weight = ko.observable(0); // TODO: bug in ko-slider preventing using ES5 property. Force to observable
+    // elements that do not need to be tracked as observables
+    this.toString = function() {
+      if (this.type === 'weight') this.value = (this.weight() / 100).toPrecision(2);
+      this.createRule();
+      return this.rule;
+    };
+
+    this.createRule = function() {
+      this.rule = this.version + "(" + this.type + "=" + this.value + ")";
+    };
+
+    this.weight = ko.observable(this.value * 100); // TODO: bug in ko-slider preventing using ES5 property. Force to observable
   }
 
   function viewModel() {
@@ -78,6 +86,8 @@ $(document).ready(function(){
       });
       $('#collapseRoutes').collapse('show');
     };
+
+    // TODO - add error checking for non-selected version, no value field, etc.
     this.modifyRoutes = function() {
       var selectors = this.selectors.join(',').trim();
       var data = { service: this.selectedService.name }
@@ -105,7 +115,9 @@ $(document).ready(function(){
     };
 
     ko.track(this);
-    //ko.applyBindings(this.selectors);
+
+    // elements that don't need to be tracked as observables
+    this.SELECTORTYPES = ['user', 'weight'];
 
     function doPoll() {
       $http.request({url: '/api/v1/services'}).then(function(res) {

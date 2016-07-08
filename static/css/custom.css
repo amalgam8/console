@@ -21,3 +21,12 @@ a {
 .service-versionselectors {
   margin-bottom: 10px;
 }
+
+.glyphicon-lg {
+  font-size: 1.5em;
+}
+
+.slider.slider-horizontal {
+  width: 100%;
+  margin-top: 10px;
+}
