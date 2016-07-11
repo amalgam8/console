@@ -28,8 +28,7 @@ class dotdict(dict):
 settings = {
     'debug': os.getenv('A8_DEBUG')=='1',
     'a8_url': os.getenv('A8_CONTROLLER_URL', 'http://localhost:31200'),
-    'a8_token': os.getenv('A8_CONTROLLER_TOKEN', '12345'),
-    'a8_tenant_id': os.getenv('A8_CONTROLLER_TENANT_ID', 'local'),
+    'a8_token': os.getenv('A8_CONTROLLER_TOKEN', 'local'),
     'a8_registry_url': os.getenv('A8_REGISTRY_URL', None),
     'a8_registry_token': os.getenv('A8_REGISTRY_TOKEN', None)
 }
