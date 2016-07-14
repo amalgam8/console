@@ -42,7 +42,24 @@ $(document).ready(function(){
     this.rule = s;
     this.version = match ? match[1].trim().toLowerCase() : '';
     this.type = match ? match[2].trim().toLowerCase() : '';
-    this.value = match ? match[3].trim().toLowerCase() : '';
+    var value = match ? match[3].trim() : '';
+    this.pattern = '';
+    
+    if (this.type == 'user') {
+      this.value = value.substring(1,value.length-1)
+    }
+    else if (this.type == 'header') {
+      var colon = value.indexOf(':')
+      this.value = value.substring(1, colon)
+      this.pattern = value.substring(colon+1, value.length-1)
+    }
+    else if (this.type == 'weight') {
+      this.value = value
+    }
+    else {
+      this.type = 'raw'
+      this.value = this.rule
+    }
 
     ko.track(this);
 
@@ -54,7 +71,19 @@ $(document).ready(function(){
     };
 
     this.createRule = function() {
-      this.rule = this.version + "(" + this.type + "=" + this.value + ")";
+      var value = this.value
+      if (this.type == 'raw') {
+        this.rule = value
+      }
+      else {
+        if (this.type == 'user') {
+          value = '"' + value + '"'
+        }
+        else if (this.type == 'header') {
+          value = '"' + value + ':' + this.pattern + '"'
+        }
+        this.rule = this.version + "(" + this.type + "=" + value + ")";
+      }
     };
 
     this.asPercent = function(v) {
@@ -121,7 +150,7 @@ $(document).ready(function(){
     ko.track(this);
 
     // elements that don't need to be tracked as observables
-    this.SELECTORTYPES = ['user', 'weight'];
+    this.SELECTORTYPES = ['weight', 'user', 'header', 'raw'];
 
     function doPoll() {
       $http.request({url: '/api/v1/services'}).then(function(res) {
