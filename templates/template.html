@@ -82,7 +82,7 @@
                             <select class="form-control" id="selector-version" data-bind="options: $parent.versions, optionsCaption: 'Select Version...', value: version"></select>
                           </div>
                           <div class="col-sm-7">
-                            <input class="slider form-control" id="ex1" type="text" data-bind="sliderValue: {value: weight, min:0, max: 100, step: 5, tooltip: 'always'}">
+                            <input class="slider form-control" id="ex1" type="text" data-bind="sliderValue: {value: weight, min:0, max: 100, step: 5, tooltip: 'always', formatter: asPercent}">
                           </div>
                           <div class="col-sm-1">
                             <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>

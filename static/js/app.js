@@ -57,6 +57,10 @@ $(document).ready(function(){
       this.rule = this.version + "(" + this.type + "=" + this.value + ")";
     };
 
+    this.asPercent = function(v) {
+      return v + "%";
+    };
+    
     this.weight = ko.observable(this.value * 100); // TODO: bug in ko-slider preventing using ES5 property. Force to observable
   }
 
