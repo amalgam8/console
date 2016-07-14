@@ -59,7 +59,7 @@
                       <button class="btn btn-info" data-bind="click: addSelector">Add Selector</button>
                     </div>
                     <div class="col-sm-8">
-                      <span id="helpBlock" class="help-block">Each selector is in the form <em>version("rule")</em>, where <em>version</em> is the version name and <em>rule</em> is the comparison rule. See the <a class="text-info" href="https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md"><em>Amalgam8 README.md</em></a> for more information.</span>
+                      <span id="helpBlock" class="help-block">Each selector is in the form <em>version(rule)</em>, where <em>version</em> is the version name and <em>rule</em> is the comparison rule. See the <a class="text-info" href="https://github.com/amalgam8/examples/blob/master/apps/bookinfo/README.md"><em>Amalgam8 README.md</em></a> for more information.</span>
                       <!-- ko foreach: selectors -->
                       <div class="row service-versionselectors">
                         <div class="col-sm-3">
@@ -77,12 +77,34 @@
                             <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>
                           </div>
                           <!-- /ko -->
+                          <!-- ko if: type == 'header' -->
+                          <div class="col-sm-4">
+                            <select class="form-control" id="selector-version" data-bind="options: $parent.versions, optionsCaption: 'Select Version...', value: version"></select>
+                          </div>
+                          <div class="col-sm-3">
+                            <input type="text" class="form-control" name="selectors" placeholder="name" data-bind="value: value">
+                          </div>
+                          <div class="col-sm-4">
+                            <input type="text" class="form-control" name="selectors" placeholder="rexexp" data-bind="value: pattern">
+                          </div>
+                          <div class="col-sm-1">
+                            <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>
+                          </div>
+                          <!-- /ko -->
                           <!-- ko if: type == 'weight' -->
                           <div class="col-sm-4">
                             <select class="form-control" id="selector-version" data-bind="options: $parent.versions, optionsCaption: 'Select Version...', value: version"></select>
                           </div>
                           <div class="col-sm-7">
                             <input class="slider form-control" id="ex1" type="text" data-bind="sliderValue: {value: weight, min:0, max: 100, step: 5, tooltip: 'always'}">
+                          </div>
+                          <div class="col-sm-1">
+                            <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>
+                          </div>
+                          <!-- /ko -->
+                          <!-- ko if: type == 'raw' -->
+                          <div class="col-sm-7">
+                            <input type="text" class="form-control" name="selectors" placeholder="e.g. version(rule)" data-bind="value: value">
                           </div>
                           <div class="col-sm-1">
                             <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>
