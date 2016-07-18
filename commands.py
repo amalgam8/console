@@ -283,35 +283,53 @@ def delete_routing(args):
     print 'Deleted routing rules for microservice', args.service
 
 def rules_list(args):
-    r = a8_get('{}/v1/tenants'.format(args.a8_url), args.a8_token, showcurl=args.debug)
+    r = a8_get('{0}/v1/tenants'.format(args.a8_url),
+               args.a8_token,
+               showcurl=args.debug)
     fail_unless(r, 200)
     tenant_info = r.json()
-    x = PrettyTable(["Source", "Destination", "Header", "Header Pattern", "Delay Probability", "Delay", "Abort Probability", "Abort Code"])
-    x.align = "l"
+    result_list = []
     for value in tenant_info['filters']['rules']:
-        x.add_row([get_field(value, 'source'),
-                   get_field(value, 'destination'),
-                   get_field(tenant_info, 'req_tracking_header'),
-                   get_field(value, 'pattern'),
-                   get_field(value, 'delay_probability'),
-                   get_field(value, 'delay'),
-                   get_field(value, 'abort_probability'),
-                   get_field(value, 'return_code')
-                   ])
-    print x
+        result_list.append({"source": value["source"],
+                            "destination": value["destination"],
+                            "header": value["header"],
+                            "header_pattern": value["pattern"],
+                            "delay_probability": value["delay_probability"],
+                            "delay": value["delay"],
+                            "abort_probability": value["abort_probability"],
+                            "abort_code": value["return_code"]})
+    if args.json:
+        print json.dumps(result_list, indent=2)
+    else:
+        x = PrettyTable(["Source", "Destination", "Header", "Header Pattern", "Delay Probability", "Delay", "Abort Probability", "Abort Code"])
+        x.align = "l"
+        for entry in result_list:
+            x.add_row([entry["source"],
+                       entry["destination"],
+                       entry["header"],
+                       entry["header_pattern"],
+                       entry["delay_probability"],
+                       entry["delay"],
+                       entry["abort_probability"],
+                       entry["abort_code"]
+            ])
+        print x
 
 def set_rule(args):
-    if not args.source and not args.destination:
-         print "You must specify --source and --destination"
-         sys.exit(4)
+    if not args.source or not args.destination or not args.header:
+        print "You must specify --source, --destination, and --header"
+        sys.exit(4)
 
     rule_request = {
         "source": args.source,
-        "destination": args.destination
+        "destination": args.destination,
+        "header" : args.header
     }
 
     if args.pattern:
         rule_request['pattern'] = '.*?'+args.pattern
+    else:
+        rule_request['pattern'] = '.*'
     if args.delay:
         rule_request['delay'] = args.delay
     if args.delay_probability:
@@ -321,9 +339,11 @@ def set_rule(args):
     if args.abort_code:
         rule_request['return_code'] = args.abort_code
 
+    if not (args.delay > 0 and args.delay_probability > 0.0) and not (args.abort_code and args.abort_probability > 0.0):
+        print "You must specify either a valid delay with non-zero delay_probability or a valid abort-code with non-zero abort-probability"
+        sys.exit(4)
+
     payload = {"filters":{"rules":[rule_request]}}
-    if args.header:
-        payload['req_tracking_header'] = args.header
 
     r = a8_put('{}/v1/tenants'.format(args.a8_url), # TODO: use an API that won't wipe out other rules
                args.a8_token,
