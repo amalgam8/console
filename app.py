@@ -30,12 +30,18 @@ settings = {
     'a8_url': os.getenv('A8_CONTROLLER_URL', 'http://localhost:31200'),
     'a8_token': os.getenv('A8_CONTROLLER_TOKEN', 'local'),
     'a8_registry_url': os.getenv('A8_REGISTRY_URL', None),
-    'a8_registry_token': os.getenv('A8_REGISTRY_TOKEN', None)
+    'a8_registry_token': os.getenv('A8_REGISTRY_TOKEN', None),
+    'json': True
 }
 settings = dotdict(settings)
 
 app = Flask(__name__, static_url_path='')
 app.debug = True
+
+@app.route('/api/v1/rules')
+def get_rules():
+    res = commands.rules_list(settings)
+    return jsonify(rules=res)
 
 @app.route('/api/v1/services')
 def get_services():

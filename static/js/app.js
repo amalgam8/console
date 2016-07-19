@@ -6,6 +6,20 @@ $(document).ready(function(){
   $http.defaults.headers.common['Accept'] = 'application/json';
   var LIST_SEPARATOR = ", ";
 
+  /*
+   * cheap and dirty jQuery hash based router
+   */
+  function Router(changePageFn, pagelinkClass = ".pagelink")
+  {
+    var self = this;
+    self.changePage = changePageFn; // callback
+
+    $(pagelinkClass).on("click", function(e) {
+      var target = e.target.href.split('#')[1];
+      self.changePage(target);
+    });
+  }
+
   var UNVERSIONED = "UNVERSIONED";
   function getVersionOptions(versions) {
     var res = []
@@ -44,7 +58,7 @@ $(document).ready(function(){
     this.type = match ? match[2].trim().toLowerCase() : '';
     var value = match ? match[3].trim() : '';
     this.pattern = '';
-    
+
     if (this.type == 'user') {
       this.value = value.substring(1,value.length-1)
     }
@@ -89,13 +103,25 @@ $(document).ready(function(){
     this.asPercent = function(v) {
       return v + "%";
     };
-    
+
     this.weight = ko.observable(this.value * 100); // TODO: bug in ko-slider preventing using ES5 property. Force to observable
+  }
+
+  function Rule(rule) {
+      this.abort_code = rule.abort_code || 0;
+      this.abort_probability = rule.abort_probability || 0;
+      this.delay = rule.delay || 0;
+      this.delay_probability = rule.delay_probability || 0;
+      this.destination = rule.destination || "";
+      this.header = rule.header || "Cookie";
+      this.header_pattern = rule.header_pattern || "";
+      this.source = rule.source || "";
   }
 
   function viewModel() {
     var self=this;
     this.services = [];
+    this.rules = [];
     this.selectedService = new Service();
     this.versions = [];
     this.selectedVersion = '';
@@ -147,7 +173,24 @@ $(document).ready(function(){
       $('#collapseRoutes').collapse('hide');
     };
 
+    this.newRule = function() {
+      alert("NOT IMPLEMENTED YET");
+    };
+    this.editRule = function() {
+      alert("NOT IMPLEMENTED YET");
+    };
     ko.track(this);
+
+    // connect up the Router - es5 properties not working so use observables
+    // TODO: selection of initial page is naive and only works with two pages. Fix later.
+    var page = '/routes';
+    if (window.location.hash == '#/rules') page = '/rules';
+    self.currentPage = ko.observable(page);
+    self.changePage = function(page) {
+      self.currentPage(page);
+    };
+
+    var router = new Router(self.changePage);
 
     // elements that don't need to be tracked as observables
     this.SELECTORTYPES = ['weight', 'user', 'header', 'raw'];
@@ -163,6 +206,18 @@ $(document).ready(function(){
 
         services.sort(function(a,b) { return a.name > b.name;});
         self.services = services;
+      });
+
+      $http.request({url: '/api/v1/rules'}).then(function(res) {
+        if (res.status !== 200) console.log(res);
+
+        var rules = [];
+        res.data.rules.forEach(function(rule) {
+          rules.push(new Rule(rule));
+        });
+
+        rules.sort(function(a,b) { return a.source > b.source;});
+        self.rules = rules;
       });
     }
 

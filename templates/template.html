@@ -31,6 +31,10 @@
           <a class="navbar-brand" href="#">Amalgam8</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="pagelink" href="#/routes">Routes</a></li>
+            <li><a class="pagelink" href="#/rules">Rules</a></li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
           </ul>
@@ -129,7 +133,7 @@
     </div>
 
     <div class="container">
-      <!-- template: services -->
+      <!-- ko if: currentPage() == '/routes' -->
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Service List</h3>
@@ -164,7 +168,51 @@
           </tbody>
         </table>
       </div>
-      <!-- /template -->
+      <!-- /ko -->
+
+      <!-- ko if: currentPage() == '/rules' -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Rules
+            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">New Rule</button>              
+          </h3>
+
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Destination</th>
+              <th>Header</th>
+              <th>Pattern</th>
+              <th>Delay Probability</th>
+              <th>Delay (sec)</th>
+              <th>Abort Probability</th>
+              <th>Abort Code</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- ko foreach: rules -->
+            <tr>
+              <td>{{ source }}</td>
+              <td>{{ destination }}</td>
+              <td>{{ header }}</td>
+              <td>{{ header_pattern }}</td>
+              <td>{{ delay}}</td>
+              <td>{{ delay_probability }}</td>
+              <td>{{ abort_probability }}</td>
+              <td>{{ abort_code }}</td>
+              <td>
+                <button type="button" class="btn btn-default" data-bind="click: $parent.editRule"><i class="glyphicon glyphicon-pencil"></i>Edit Rule</button>
+              </td>
+            </tr>
+            <!-- /ko -->
+          </tbody>
+        </table>
+      </div>
+      <!-- /ko -->
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

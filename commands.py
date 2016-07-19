@@ -298,6 +298,8 @@ def rules_list(args):
                             "delay": value["delay"],
                             "abort_probability": value["abort_probability"],
                             "abort_code": value["return_code"]})
+    return result_list
+    '''
     if args.json:
         print json.dumps(result_list, indent=2)
     else:
@@ -314,7 +316,8 @@ def rules_list(args):
                        entry["abort_code"]
             ])
         print x
-
+    '''
+    
 def set_rule(args):
     if not args.source or not args.destination or not args.header:
         print "You must specify --source, --destination, and --header"
