@@ -186,9 +186,9 @@
               <th>Destination</th>
               <th>Header</th>
               <th>Pattern</th>
-              <th>Delay Probability</th>
+              <th>Delay Probability (%)</th>
               <th>Delay (sec)</th>
-              <th>Abort Probability</th>
+              <th>Abort Probability (%)</th>
               <th>Abort Code</th>
               <th></th>
             </tr>
@@ -200,9 +200,9 @@
               <td>{{ destination }}</td>
               <td>{{ header }}</td>
               <td>{{ header_pattern }}</td>
-              <td>{{ delay}}</td>
-              <td>{{ delay_probability }}</td>
-              <td>{{ abort_probability }}</td>
+              <td>{{ delay_probability }} %</td>
+              <td>{{ delay }}</td>
+              <td>{{ abort_probability }} %</td>
               <td>{{ abort_code }}</td>
               <td>
                 <a href="#"  title="edit rule" data-bind="click: $parent.editRule"><i class="glyphicon glyphicon-pencil"></i></a>

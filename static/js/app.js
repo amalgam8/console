@@ -111,7 +111,7 @@ $(document).ready(function(){
       this.abort_code = rule.abort_code || 0;
       this.abort_probability = rule.abort_probability || 0;
       this.delay = rule.delay || 0;
-      this.delay_probability = rule.delay_probability || 0;
+      this.delay_probability = (100 * rule.delay_probability) || 0;
       this.destination = rule.destination || "";
       this.header = rule.header || "Cookie";
       this.header_pattern = rule.header_pattern || "";
