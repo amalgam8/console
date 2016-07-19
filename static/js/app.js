@@ -71,7 +71,7 @@ $(document).ready(function(){
       this.value = value
     }
     else {
-      this.type = 'raw'
+      this.type = '--raw text--'
       this.value = this.rule
     }
 
@@ -86,7 +86,7 @@ $(document).ready(function(){
 
     this.createRule = function() {
       var value = this.value
-      if (this.type == 'raw') {
+      if (this.type == '--raw text--') {
         this.rule = value
       }
       else {
@@ -193,7 +193,7 @@ $(document).ready(function(){
     var router = new Router(self.changePage);
 
     // elements that don't need to be tracked as observables
-    this.SELECTORTYPES = ['weight', 'user', 'header', 'raw'];
+    this.SELECTORTYPES = ['weight', 'user', 'header', '--raw text--'];
 
     function doPoll() {
       $http.request({url: '/api/v1/services'}).then(function(res) {
