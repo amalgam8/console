@@ -175,7 +175,7 @@
         <div class="panel-heading">
           <h3 class="panel-title">
             Rules
-            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">New Rule</button>              
+            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">New Rule</button>
           </h3>
 
         </div>
@@ -205,7 +205,8 @@
               <td>{{ abort_probability }}</td>
               <td>{{ abort_code }}</td>
               <td>
-                <button type="button" class="btn btn-default" data-bind="click: $parent.editRule"><i class="glyphicon glyphicon-pencil"></i>Edit Rule</button>
+                <a href="#"  title="edit rule" data-bind="$parent.editRule"><i class="glyphicon glyphicon-pencil"></i></a>
+                <a href="#"  title="delete rule" data-bind="$parent.deleteRule"><i class="glyphicon glyphicon-trash"></i></a>
               </td>
             </tr>
             <!-- /ko -->
