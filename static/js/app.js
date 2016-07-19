@@ -179,6 +179,9 @@ $(document).ready(function(){
     this.editRule = function() {
       alert("NOT IMPLEMENTED YET");
     };
+    this.deleteRule = function() {
+      alert("NOT IMPLEMENTED YET");
+    }
     ko.track(this);
 
     // connect up the Router - es5 properties not working so use observables
