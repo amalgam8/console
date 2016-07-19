@@ -71,7 +71,7 @@
                             <select class="form-control" id="selector-version" data-bind="options: $parent.versions, optionsCaption: 'Select Version...', value: version"></select>
                           </div>
                           <div class="col-sm-7">
-                            <input type="text" class="form-control" name="selectors" data-bind="value: value">
+                            <input type="text" class="form-control" name="selectors" placeholder="name" data-bind="value: value">
                           </div>
                           <div class="col-sm-1">
                             <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>
@@ -102,7 +102,7 @@
                             <i class="glyphicon glyphicon-trash glyphicon-lg" data-bind="click: $parent.deleteSelector"></i>
                           </div>
                           <!-- /ko -->
-                          <!-- ko if: type == 'raw' -->
+                          <!-- ko if: type == '--raw text--' -->
                           <div class="col-sm-7">
                             <input type="text" class="form-control" name="selectors" placeholder="e.g. version(rule)" data-bind="value: value">
                           </div>
