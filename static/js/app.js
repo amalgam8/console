@@ -124,6 +124,11 @@ $(document).ready(function(){
       // TODO: hack for slider component - needs observable and not es5 object
       this.slider_delay_probability = ko.observable(this.delay_probability);
       this.slider_abort_probability = ko.observable(this.abort_probability);
+
+      this.asPercent = function(v) {
+        return v + "%";
+      };
+
   }
 
   function viewModel() {
@@ -201,6 +206,14 @@ $(document).ready(function(){
       this.selectedRule = rule;
       $('#collapseRules').collapse('toggle');
     };
+    this.cancelRule = function() {
+      this.selectedRule = new Rule({});
+      $('#collapseRules').collapse('hide');
+    };
+    this.modifyRule = function() {
+      alert('NOT IMPLEMENTED YET');
+    };
+
     this.deleteRule = function(rule) {
       rule.active = false;
       var config = {
@@ -221,7 +234,7 @@ $(document).ready(function(){
     self.changePage = function(page) {
       $('#collapseRules').collapse('hide');
       $('#collapseRoutes').collapse('hide');
-      
+
       self.currentPage(page);
     };
 

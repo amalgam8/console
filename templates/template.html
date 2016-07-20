@@ -168,7 +168,7 @@
                   <div class="form-group">
                     <label for="delay_probability" class="col-sm-2 control-label">Delay Probability</label>
                     <div class="col-sm-4">
-                      <input class="slider form-control" id="delay_probability" type="text" data-bind="sliderValue: {value: slider_delay_probability, min:0, max: 100, step: 5, tooltip: 'always', formatter: $parent.asPercent}">
+                      <input class="slider form-control" id="delay_probability" type="text" data-bind="sliderValue: {value: slider_delay_probability, min:0, max: 100, step: 5, tooltip: 'always', formatter: asPercent}">
                     </div>
                   </div>
                   <div class="form-group">
@@ -180,7 +180,7 @@
                   <div class="form-group">
                     <label for="abort_probability" class="col-sm-2 control-label">About Probability</label>
                     <div class="col-sm-4">
-                      <input class="slider form-control" id="abort_probability" type="text" data-bind="sliderValue: {value: slider_abort_probability, min:0, max: 100, step: 5, tooltip: 'always', formatter: $parent.asPercent}">
+                      <input class="slider form-control" id="abort_probability" type="text" data-bind="sliderValue: {value: slider_abort_probability, min:0, max: 100, step: 5, tooltip: 'always', formatter: asPercent}">
                     </div>
                   </div>
                   <div class="form-group">
@@ -191,8 +191,8 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-default" data-bind="click: modifyRule">Modify Rule</button>
-                      <button class="btn btn-default" data-bind="click: cancelRule">Cancel</button>
+                      <button class="btn btn-default" data-bind="click: $parent.modifyRule">Modify Rule</button>
+                      <button class="btn btn-default" data-bind="click: $parent.cancelRule">Cancel</button>
                     </div>
                   </div>
               </form>
