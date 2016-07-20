@@ -120,10 +120,16 @@ $(document).ready(function(){
       this.source = rule.source || "";
 
       ko.track(this);
+
+      // TODO: hack for slider component - needs observable and not es5 object
+      this.slider_delay_probability = ko.observable(this.delay_probability);
+      this.slider_abort_probability = ko.observable(this.abort_probability);
   }
 
   function viewModel() {
     var self=this;
+    this.selectedRule = new Rule({});
+
     this.services = [];
     this.rules = [];
     this.selectedService = new Service();
@@ -177,11 +183,23 @@ $(document).ready(function(){
       $('#collapseRoutes').collapse('hide');
     };
 
-    this.newRule = function() {
-      alert("NOT IMPLEMENTED YET");
+    this.srcdstList = function() {
+      var srcdst = [];
+      this.services.forEach(function(service) {
+        service.versions.forEach(function(v) {
+          srcdst.push(service.name + ':' + v.name);
+        });
+      });
+
+      return srcdst;
     };
-    this.editRule = function() {
-      alert("NOT IMPLEMENTED YET");
+
+    this.newRule = function() {
+      this.editRule(new Rule({}));
+    };
+    this.editRule = function(rule) {
+      this.selectedRule = rule;
+      $('#collapseRules').collapse('toggle');
     };
     this.deleteRule = function(rule) {
       rule.active = false;
@@ -201,6 +219,9 @@ $(document).ready(function(){
     if (window.location.hash == '#/rules') page = '/rules';
     self.currentPage = ko.observable(page);
     self.changePage = function(page) {
+      $('#collapseRules').collapse('hide');
+      $('#collapseRoutes').collapse('hide');
+      
       self.currentPage(page);
     };
 
