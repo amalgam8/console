@@ -21,3 +21,9 @@ You can access the console UI @ http://localhost:5000
 - Only local authorization is supported with this version
 - Faults/recipes cannot be set
 - There is no error/parse checking on version selector rules
+
+## Contributing
+
+Contributions and feedback are welcome!
+Proposals and pull requests will be considered. 
+Please see the [CONTRIBUTING.md](https://github.com/amalgam8/amalgam8.github.io/blob/master/CONTRIBUTING.md) file for more information.
