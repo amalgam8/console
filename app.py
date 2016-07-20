@@ -43,6 +43,13 @@ def get_rules():
     res = commands.rules_list(settings)
     return jsonify(rules=res)
 
+@app.route('/api/v1/rules/<id>', methods=["DELETE"])
+def delete_rule(id):
+    args = settings
+    args.rule_id = id
+    commands.delete_rule(args)
+    return "", 200
+
 @app.route('/api/v1/services')
 def get_services():
   res = commands.service_list(settings)

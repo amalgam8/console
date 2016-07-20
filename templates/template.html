@@ -182,6 +182,7 @@
         <table class="table">
           <thead>
             <tr>
+              <th></th>
               <th>Source</th>
               <th>Destination</th>
               <th>Header</th>
@@ -196,6 +197,7 @@
           <tbody>
             <!-- ko foreach: rules -->
             <tr>
+              <td><i class="glyphicon {{ active ? 'glyphicon-ok-sign text-success': 'glyphicon-remove-sign text-danger' }} pad-left-10 lg-icon"></i></td>
               <td>{{ source }}</td>
               <td>{{ destination }}</td>
               <td>{{ header }}</td>

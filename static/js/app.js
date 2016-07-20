@@ -108,6 +108,8 @@ $(document).ready(function(){
   }
 
   function Rule(rule) {
+      this.active = true;
+      this.id = rule.id || 0;
       this.abort_code = rule.abort_code || 0;
       this.abort_probability = rule.abort_probability || 0;
       this.delay = rule.delay || 0;
@@ -116,6 +118,8 @@ $(document).ready(function(){
       this.header = rule.header || "Cookie";
       this.header_pattern = rule.header_pattern || "";
       this.source = rule.source || "";
+
+      ko.track(this);
   }
 
   function viewModel() {
@@ -179,8 +183,15 @@ $(document).ready(function(){
     this.editRule = function() {
       alert("NOT IMPLEMENTED YET");
     };
-    this.deleteRule = function() {
-      alert("NOT IMPLEMENTED YET");
+    this.deleteRule = function(rule) {
+      rule.active = false;
+      var config = {
+        url: '/api/v1/rules/' + rule.id,
+        method: 'delete'
+      }
+      $http.request(config).then(function(res) {
+        // TODO: check status = 200
+      });
     }
     ko.track(this);
 
