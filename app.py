@@ -43,6 +43,21 @@ def get_rules():
     res = commands.rules_list(settings)
     return jsonify(rules=res)
 
+@app.route('/api/v1/rules', methods=["POST"])
+def post_rule():
+    payload = request.get_json()
+    args = settings
+    args.source = payload["source"]
+    args.destination = payload["destination"]
+    args.header = payload["header"]
+    args.pattern = payload["header_pattern"]
+    args.delay_probability = payload["delay_probability"]
+    args.delay = payload["delay"]
+    args.abort_probability = payload["abort_probability"]
+    args.abort_code = payload["abort_code"]
+    commands.set_rule(args)
+    return "", 200
+
 @app.route('/api/v1/rules/<id>', methods=["DELETE"])
 def delete_rule(id):
     args = settings

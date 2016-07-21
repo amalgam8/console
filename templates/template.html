@@ -138,7 +138,7 @@
         <div class="container">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Edit Rule</h3>
+              <h3 class="panel-title">New Rule</h3>
             </div>
             <div class="panel-body">
               <form class="form-horizontal" data-bind="with: selectedRule">
@@ -192,7 +192,7 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-default" data-bind="click: $parent.modifyRule">Modify Rule</button>
+                      <button class="btn btn-default" data-bind="click: $parent.createRule">Create Rule</button>
                       <button class="btn btn-default" data-bind="click: $parent.cancelRule">Cancel</button>
                     </div>
                   </div>
@@ -247,7 +247,8 @@
         <div class="panel-heading">
           <h3 class="panel-title">
             Rules
-            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">New Rule</button>
+            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">Set Rule</button>
+            <!-- <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: runRecipe">Run Recipe</button> -->
           </h3>
         </div>
         <table class="table">
@@ -278,7 +279,6 @@
               <td>{{ abort_probability }} %</td>
               <td>{{ abort_code }}</td>
               <td>
-                <a href="#"  title="edit rule" data-bind="click: $parent.editRule"><i class="glyphicon glyphicon-pencil"></i></a>
                 <a href="#"  title="delete rule" data-bind="click: $parent.deleteRule"><i class="glyphicon glyphicon-trash"></i></a>
               </td>
             </tr>

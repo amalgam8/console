@@ -153,9 +153,10 @@ $(document).ready(function(){
       this.active = true;
       this.id = rule.id || 0;
       this.abort_code = rule.abort_code || 0;
-      this.abort_probability = rule.abort_probability || 0;
+      this.abort_probability = (100 * rule.abort_probability) || 0;
       this.delay = rule.delay || 0;
-      this.delay_probability = (100 * rule.delay_probability) || 0;
+      //this.delay_probability = (100 * rule.delay_probability) || 0;
+      this.delay_probability = (100 * rule.delay_probability) || 50; //FB TEMP HACK
       this.destination = rule.destination || "";
       this.header = rule.header || "Cookie";
       this.header_pattern = rule.header_pattern || "";
@@ -242,18 +243,34 @@ $(document).ready(function(){
     };
 
     this.newRule = function() {
-      this.editRule(new Rule({}));
-    };
-    this.editRule = function(rule) {
-      this.selectedRule = rule;
+      this.selectedRule = new Rule({});
       $('#collapseRules').collapse('toggle');
     };
     this.cancelRule = function() {
       this.selectedRule = new Rule({});
       $('#collapseRules').collapse('hide');
     };
-    this.modifyRule = function() {
-      alert('NOT IMPLEMENTED YET');
+    this.createRule = function() {
+      var data = {
+        source: this.selectedRule.source,
+        destination: this.selectedRule.destination,
+        header: this.selectedRule.header,
+        header_pattern: this.selectedRule.header_pattern,
+        delay_probability: this.selectedRule.delay_probability * 1.0 / 100,
+        delay: Number(this.selectedRule.delay),
+        abort_probability: this.selectedRule.abort_probability * 1.0 / 100,
+        abort_code: Number(this.selectedRule.abort_code),
+      }
+      var config = {
+        url: '/api/v1/rules',
+        method: 'post',
+        data: data
+      }
+      $http.request(config).then(function(res) {
+        console.log(res);
+      });
+
+      $('#collapseRules').collapse('hide');
     };
 
     this.deleteRule = function(rule) {

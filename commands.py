@@ -321,8 +321,8 @@ def rules_list(args):
     
 def set_rule(args):
     if not args.source or not args.destination or not args.header:
-        print "You must specify --source, --destination, and --header"
-        sys.exit(4)
+         print "You must specify --source, --destination, and --header"
+         sys.exit(4)
 
     rule_request = {
         "source": args.source,
@@ -334,6 +334,7 @@ def set_rule(args):
         rule_request['pattern'] = '.*?'+args.pattern
     else:
         rule_request['pattern'] = '.*'
+
     if args.delay:
         rule_request['delay'] = args.delay
     if args.delay_probability:
@@ -353,7 +354,7 @@ def set_rule(args):
                 args.a8_token,
                 json.dumps(payload),
                 showcurl=args.debug)
-    fail_unless(r, 200)
+    fail_unless(r, 201)
     print 'Set fault injection rule between %s and %s' % (args.source, args.destination)
 
 def clear_rules(args):
