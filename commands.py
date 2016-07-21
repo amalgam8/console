@@ -385,7 +385,7 @@ def _print_assertion_results(results):
                    get_field(check, 'result'),
                    get_field(check, 'errormsg')
         ])
-    print x
+    return x
 
 def run_recipe(args):
     if not args.topology or not args.scenarios:
@@ -427,25 +427,34 @@ def run_recipe(args):
         with open(args.checks) as fp:
             checklist = json.load(fp)
 
-    fg = A8FailureGenerator(topology, a8_url=args.a8_url, a8_token=args.a8_token,
+    fg = A8FailureGenerator(topology, a8_url='{0}/v1/rules'.format(args.a8_url), a8_token=args.a8_token, 
                             header=header, pattern='.*?'+pattern, debug=args.debug)
     fg.setup_failures(scenarios)
     start_time = datetime.datetime.utcnow().isoformat()
     print start_time
     print 'Inject test requests with HTTP header %s matching the pattern %s' % (header, pattern)
     if args.checks:
-        print ('When done, press Enter key to continue to validation phase')
-        a = sys.stdin.read(1)
+        if args.run_load_script:
+            import subprocess
+            print ">>>", args.run_load_script
+            subprocess.call([args.run_load_script])
+        else:
+            print ('When done, press Enter key to continue to validation phase')
+            a = sys.stdin.read(1)
         #sleep for 3sec to make sure all logs reach elasticsearch
         time.sleep(3)
         end_time=datetime.datetime.utcnow().isoformat()
         print end_time
         #sleep for some more time to make sure all logs have been flushed
         time.sleep(5)
-        ac = A8AssertionChecker(checklist['log_server'], None, header=header, pattern=pattern, start_time=start_time, end_time=end_time, debug=args.debug)
+        log_server = checklist.get('log_server', args.a8_log_server)
+        ac = A8AssertionChecker(es_host=log_server, header=header, pattern=pattern, start_time=start_time, end_time=end_time, debug=args.debug)
         results = ac.check_assertions(checklist, continue_on_error=True)
-        _print_assertion_results(results)
-        clear_rules(args)
+        
+        #clear_rules(args)
+        
+        return _print_assertion_results(results)
+
         # for check in results:
         #     print 'Check %s %s %s' % (check.name, check.info, passOrfail(check.success))
         # if not check.success:

@@ -34,7 +34,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a class="pagelink" href="#/routes">Routes</a></li>
-            <li><a class="pagelink" href="#/rules">Rules</a></li>
+            <li><a class="pagelink" href="#/rules">Faults</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
@@ -138,7 +138,7 @@
         <div class="container">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">New Rule</h3>
+              <h3 class="panel-title">Add Fault</h3>
             </div>
             <div class="panel-body">
               <form class="form-horizontal" data-bind="with: selectedRule">
@@ -192,7 +192,7 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-default" data-bind="click: $parent.createRule">Create Rule</button>
+                      <button class="btn btn-default" data-bind="click: $parent.createRule">Create Fault</button>
                       <button class="btn btn-default" data-bind="click: $parent.cancelRule">Cancel</button>
                     </div>
                   </div>
@@ -304,8 +304,8 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">
-            Rules
-            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">Set Rule</button>
+            Faults
+            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">Add Fault</button>
             <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRecipe">Run Recipe</button>
           </h3>
         </div>

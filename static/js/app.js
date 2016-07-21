@@ -155,8 +155,7 @@ $(document).ready(function(){
       this.abort_code = rule.abort_code || 0;
       this.abort_probability = (100 * rule.abort_probability) || 0;
       this.delay = rule.delay || 0;
-      //this.delay_probability = (100 * rule.delay_probability) || 0;
-      this.delay_probability = (100 * rule.delay_probability) || 50; //FB TEMP HACK
+      this.delay_probability = (100 * rule.delay_probability) || 0;
       this.destination = rule.destination || "";
       this.header = rule.header || "Cookie";
       this.header_pattern = rule.header_pattern || "";
@@ -263,7 +262,22 @@ $(document).ready(function(){
       $('#collapseRecipe').collapse('hide');
     };
     this.runRecipe = function() {
-      alert('NOT IMPLEMENTED YET');
+      var data = {
+        topology: this.recipe.topology,
+        scenarios: this.recipe.scenarios,
+        checks: this.recipe.checks,
+        load_script: this.recipe.load_script,
+        header: this.recipe.header,
+        header_pattern: this.recipe.header_pattern
+      }
+      var config = {
+        url: '/api/v1/recipes',
+        method: 'post',
+        data: data
+      }
+      $http.request(config).then(function(res) {
+        console.log(res);
+      });
     };
 
     this.newRule = function() {
@@ -283,7 +297,7 @@ $(document).ready(function(){
         delay_probability: this.selectedRule.slider_delay_probability() * 1.0 / 100,
         delay: Number(this.selectedRule.delay),
         abort_probability: this.selectedRule.slider_abort_probability() * 1.0 / 100,
-        abort_code: Number(this.selectedRule.abort_code),
+        abort_code: Number(this.selectedRule.abort_code)
       }
       var config = {
         url: '/api/v1/rules',

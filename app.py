@@ -65,6 +65,20 @@ def delete_rule(id):
     commands.delete_rule(args)
     return "", 200
 
+@app.route('/api/v1/recipes', methods=["POST"])
+def post_recipe():
+    payload = request.get_json()
+    print ">>>"
+    print json.dumps(payload)
+    args = settings
+    args.topology = payload["topology"]
+    args.scenarios = payload["scenarios"]
+    args.checks = payload["checks"]
+    args.run_load_script = payload["load_script"]
+    args.header = payload["header"]
+    args.pattern = payload["header_pattern"]
+    return commands.run_recipe(args), 200
+
 @app.route('/api/v1/services')
 def get_services():
   res = commands.service_list(settings)
