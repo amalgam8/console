@@ -280,9 +280,9 @@ $(document).ready(function(){
         destination: this.selectedRule.destination,
         header: this.selectedRule.header,
         header_pattern: this.selectedRule.header_pattern,
-        delay_probability: this.selectedRule.delay_probability * 1.0 / 100,
+        delay_probability: this.selectedRule.slider_delay_probability() * 1.0 / 100,
         delay: Number(this.selectedRule.delay),
-        abort_probability: this.selectedRule.abort_probability * 1.0 / 100,
+        abort_probability: this.selectedRule.slider_abort_probability() * 1.0 / 100,
         abort_code: Number(this.selectedRule.abort_code),
       }
       var config = {
