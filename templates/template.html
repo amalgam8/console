@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/slate/bootstrap.min.css" integrity="sha384-X9JiR5BtXUXiV6R3XuMyVGefFyy+18PHpBwaMfteb/vd2RrK6Gt4KPenkQyWLxCC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="/css/custom.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -248,7 +249,6 @@
             Rules
             <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">New Rule</button>
           </h3>
-
         </div>
         <table class="table">
           <thead>
@@ -258,9 +258,9 @@
               <th>Destination</th>
               <th>Header</th>
               <th>Pattern</th>
-              <th>Delay Probability (%)</th>
+              <th>Delay %</th>
               <th>Delay (sec)</th>
-              <th>Abort Probability (%)</th>
+              <th>Abort %</th>
               <th>Abort Code</th>
               <th></th>
             </tr>
@@ -268,7 +268,7 @@
           <tbody>
             <!-- ko foreach: rules -->
             <tr>
-              <td><i class="glyphicon {{ active ? 'glyphicon-ok-sign text-success': 'glyphicon-remove-sign text-danger' }} pad-left-10 lg-icon"></i></td>
+              <td></td>
               <td>{{ source }}</td>
               <td>{{ destination }}</td>
               <td>{{ header }}</td>
@@ -294,6 +294,7 @@
     <script src="https://npmcdn.com/axios/dist/axios.min.js"></script> <!-- minimal AJAX http library -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/bootstrap-slider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
     <script src="/vendor/knockout-es5.min.js" charset="utf-8"></script>
     <script src="/vendor/knockout.punches.min.js" charset="utf-8"></script>

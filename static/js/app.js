@@ -1,7 +1,49 @@
 "use strict";
 var $http = window.axios;
 
+String.prototype.hashCode = function() {
+  var hash = 0, i, chr, len;
+  if (this.length === 0) return hash;
+  for (i = 0, len = this.length; i < len; i++) {
+    chr   = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 $(document).ready(function(){
+
+  // initialize bootstrap notify component
+  $.notifyDefaults({
+    element: 'body',
+    position: null,
+    type: "info",
+    allow_dismiss: true,
+    newest_on_top: false,
+    placement: {
+      from: "top",
+      align: "right"
+    },
+    offset: 20,
+    spacing: 10,
+    z_index: 1031,
+    delay: 3000,
+    timer: 1000,
+    url_target: '_blank',
+    mouse_over: null,
+    animate: {
+      enter: 'animated fadeInDown',
+      exit: 'animated fadeOutUp'
+    },
+    onShow: null,
+    onShown: null,
+    onClose: null,
+    onClosed: null,
+    icon_type: 'class',
+    template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert"><button type="button" aria-hidden="true" class="close" data-notify="dismiss">&times;</button><span data-notify="icon"></span> <span data-notify="title">{1}</span> <span data-notify="message">{2}</span><div class="progress" data-notify="progressbar"><div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div></div><a href="{3}" target="{4}" data-notify="url"></a></div>'
+  });
+
   $http.defaults.headers.post['Content-Type'] = 'application/json';
   $http.defaults.headers.common['Accept'] = 'application/json';
   var LIST_SEPARATOR = ", ";
@@ -215,6 +257,14 @@ $(document).ready(function(){
     };
 
     this.deleteRule = function(rule) {
+      $.notify({
+      	// options
+      	message: 'Deleting rule...'
+      },{
+      	// settings
+      	type: 'warning'
+      });
+
       rule.active = false;
       var config = {
         url: '/api/v1/rules/' + rule.id,
@@ -225,6 +275,11 @@ $(document).ready(function(){
       });
     }
     ko.track(this);
+
+    // hash values of lists to be used to compare with AJAX responses
+    // these don't need to be observables - see doPoll()
+    self.servicesHash = 0;
+    self.rulesHash = 0;
 
     // connect up the Router - es5 properties not working so use observables
     // TODO: selection of initial page is naive and only works with two pages. Fix later.
@@ -253,7 +308,18 @@ $(document).ready(function(){
         });
 
         services.sort(function(a,b) { return a.name > b.name;});
-        self.services = services;
+
+        //
+        // IMPERFECT diff function. We take the sorted list of services, convert to JSON, and do a hash.
+        // Since there are no IDs for services this was the best we could do other than an attribute-wise compare
+        // (which would be more accurate but slower and more complex)
+        //
+        var newHash = JSON.stringify(services).hashCode();
+        if (newHash !== self.servicesHash) {
+          console.log("updating services");
+          self.servicesHash = newHash;
+          self.services = services;
+        }
       });
 
       $http.request({url: '/api/v1/rules'}).then(function(res) {
@@ -265,7 +331,20 @@ $(document).ready(function(){
         });
 
         rules.sort(function(a,b) { return a.source > b.source;});
-        self.rules = rules;
+
+        //
+        // IMPERFECT diff function. We take the sorted list of rules, convert to JSON, and do a hash.
+        // We could compare rule IDs here instead but do not know if ID changes when rule is updated, etc.
+        //
+        // TODO: refactor code since this is basically same as how services hash is handled
+        //
+
+        var newHash = JSON.stringify(rules).hashCode();
+        if (newHash !== self.rulesHash) {
+          console.log("updating rules");
+          self.rulesHash = newHash;
+          self.rules = rules;
+        }
       });
     }
 
