@@ -174,9 +174,21 @@ $(document).ready(function(){
 
   }
 
+  function Recipe() {
+      this.header = "Cookie";
+      this.header_pattern = "";
+      this.topology = "";
+      this.scenarios = "";
+      this.checks = "";
+      this.load_script = "";
+
+      ko.track(this);
+  }
+
   function viewModel() {
     var self=this;
     this.selectedRule = new Rule({});
+    this.recipe = new Recipe();
 
     this.services = [];
     this.rules = [];
@@ -240,6 +252,18 @@ $(document).ready(function(){
       });
 
       return srcdst;
+    };
+
+    this.newRecipe = function() {
+      //this.recipe = new Recipe();
+      $('#collapseRecipe').collapse('toggle');
+    };
+    this.cancelRecipe = function() {
+      //this.selectedRule = new Rule({});
+      $('#collapseRecipe').collapse('hide');
+    };
+    this.runRecipe = function() {
+      alert('NOT IMPLEMENTED YET');
     };
 
     this.newRule = function() {

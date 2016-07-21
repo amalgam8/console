@@ -204,6 +204,64 @@
       </div>
     </div>
 
+    <div class="collapse" id="collapseRecipe">
+      <div class="well" style="margin-top:10px;">
+        <div class="container">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Recipe</h3>
+            </div>
+            <div class="panel-body">
+              <form class="form-horizontal" data-bind="with: recipe">
+                  <div class="form-group">
+                      <label for="topology" class="col-sm-2 control-label">Topology</label>
+                      <div class="col-sm-2">
+                        <input type="file" class="form-control" name="topology" data-bind="file: topology">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="scenarios" class="col-sm-2 control-label">Scenarios</label>
+                      <div class="col-sm-2">
+                        <input type="file" class="form-control" name="scenarios" data-bind="file: scenarios">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="checks" class="col-sm-2 control-label">Checks</label>
+                      <div class="col-sm-2">
+                        <input type="file" class="form-control" name="checks" data-bind="file: checks">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label for="load_script" class="col-sm-2 control-label">Load Script</label>
+                      <div class="col-sm-2">
+                        <input type="file" class="form-control" name="scenarios" data-bind="file: load_script">
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="header" class="col-sm-2 control-label">Header</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" name="header" placeholder="header attribute" data-bind="value: header">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="pattern" class="col-sm-2 control-label">Header Pattern</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" name="pattern" placeholder="regex to match" data-bind="value: header_pattern">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-default" data-bind="click: $parent.runRecipe">Run It</button>
+                      <button class="btn btn-default" data-bind="click: $parent.cancelRecipe">Cancel</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <!-- ko if: currentPage() == '/routes' -->
       <div class="panel panel-default">
@@ -248,7 +306,7 @@
           <h3 class="panel-title">
             Rules
             <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">Set Rule</button>
-            <!-- <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: runRecipe">Run Recipe</button> -->
+            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRecipe">Run Recipe</button>
           </h3>
         </div>
         <table class="table">
