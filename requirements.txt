@@ -5,4 +5,4 @@ flask_bootstrap
 prettytable
 parse
 decorator
-pygremlin==0.1.6
+a8ctl==0.2.2

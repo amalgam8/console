@@ -25,7 +25,7 @@ import urllib
 import datetime, time
 import pprint
 from parse import compile
-from pygremlin import ApplicationGraph, A8FailureGenerator, A8AssertionChecker
+from gremlin import ApplicationGraph, A8FailureGenerator, A8AssertionChecker
 
 
 def passOrfail(result):
@@ -216,42 +216,6 @@ def service_list(args):
 
     return res
 
-def service_routing(args):
-    r = a8_get('{}/v1/tenants'.format(args.a8_url), args.a8_token, showcurl=args.debug)
-    fail_unless(r, 200)
-    tenant_info = r.json()
-    registry_url, registry_token = get_registry_credentials(tenant_info, args)
-    r = a8_get('{0}/api/v1/services'.format(registry_url), registry_token, showcurl=args.debug)
-    fail_unless(r, 200)
-    service_list = r.json()["services"]
-    x = PrettyTable(["Service", "Default Version", "Version Selectors"])
-    x.align = "l"
-    for value in tenant_info['filters']['versions']:
-        service = get_field(value, 'service')
-        if service in service_list:
-            service_list.remove(service)
-        default = value.get('default')
-        if not default:
-            default = NO_VERSION
-        selectors = value.get('selectors')
-        versions = []
-        if selectors:
-            selectors = selectors[selectors.find("{")+1:][:selectors.rfind("}")-1]
-            selector_list = selectors.split(",")
-            for selector in selector_list:
-                r = SELECTOR_PARSER.parse(selector.replace("{","#").replace("}","#"))
-                versions.append("%s(%s)" % (r['version'], r['rule']))
-        x.add_row([service,
-                   default,
-                   ", ".join(versions)
-                   ])
-    for service in service_list:
-        x.add_row([service,
-                   NO_VERSION,
-                   ""
-                   ])
-    print x
-
 def set_routing(args):
     if not args.default and not args.selector:
          print "You must specify --default or at least one --selector argument"
@@ -300,24 +264,6 @@ def rules_list(args):
                             "abort_probability": value["abort_probability"],
                             "abort_code": value["return_code"]})
     return result_list
-    '''
-    if args.json:
-        print json.dumps(result_list, indent=2)
-    else:
-        x = PrettyTable(["Source", "Destination", "Header", "Header Pattern", "Delay Probability", "Delay", "Abort Probability", "Abort Code"])
-        x.align = "l"
-        for entry in result_list:
-            x.add_row([entry["source"],
-                       entry["destination"],
-                       entry["header"],
-                       entry["header_pattern"],
-                       entry["delay_probability"],
-                       entry["delay"],
-                       entry["abort_probability"],
-                       entry["abort_code"]
-            ])
-        print x
-    '''
     
 def set_rule(args):
     if not args.source or not args.destination or not args.header:
@@ -453,101 +399,10 @@ def run_recipe(args):
         
         #clear_rules(args)
         
-        return _print_assertion_results(results)
+        return results
 
         # for check in results:
         #     print 'Check %s %s %s' % (check.name, check.info, passOrfail(check.success))
         # if not check.success:
         #     exit_status = 1
         # sys.exit(exit_status)
-
-def traffic_start(args):
-    if args.amount < 0 or args.amount > 100:
-         print "--amount must be between 0 and 100"
-         sys.exit(4)
-    r = a8_get('{}/v1/versions/{}'.format(args.a8_url, args.service), args.a8_token, showcurl=args.debug)
-    fail_unless(r, [200, 404])
-    if r.status_code == 200:
-        service_info = r.json()
-        if service_info['selectors']:
-            print "Invalid state for start operation"
-            sys.exit(5)
-    else:
-        service_info = {}
-    default_version = service_info.get('default')
-    if not default_version:
-        default_version = NO_VERSION
-    if args.amount == 100:
-        service_info['default'] = args.version
-    else:
-        service_info['selectors'] = "{%s={weight=%s}}" % (args.version, float(args.amount)/100)
-    r = a8_put('{}/v1/versions/{}'.format(args.a8_url, args.service),
-               args.a8_token,
-               json.dumps(service_info),
-               showcurl=args.debug)
-    fail_unless(r, 200)
-    if args.amount == 100:
-        print 'Transfer complete for {}: sending {}% of traffic to {}'.format(args.service, args.amount, args.version)
-    else:
-        print 'Transfer starting for {}: diverting {}% of traffic from {} to {}'.format(args.service, args.amount, default_version, args.version)
-
-def traffic_step(args):
-    r = a8_get('{}/v1/versions/{}'.format(args.a8_url, args.service), args.a8_token, showcurl=args.debug)
-    fail_unless(r, 200)
-    service_info = r.json()
-    default_version = service_info.get('default')
-    if not default_version:
-        default_version = NO_VERSION
-    selectors = service_info.get('selectors')
-    selectors = selectors[selectors.find("{")+1:][:selectors.rfind("}")-1]
-    selector_list = selectors.split(",")
-    if len(selector_list) != 1 or not selector_list[0]:
-         print "Invalid state for step operation"
-         sys.exit(5)
-    r = SELECTOR_PARSER.parse(selector_list[0].replace("{","#").replace("}","#"))
-    traffic_version = r['version']
-    rule = r['rule'].split("=")
-    if rule[0].strip() != "weight":
-         print "Invalid state for step operation"
-         sys.exit(6)
-    current_weight = rule[1]
-    if not args.amount:
-        new_amount = int(float(current_weight) * 100) + 10
-    else:
-        if args.amount < 0 or args.amount > 100:
-            print "--amount must be between 0 and 100"
-            sys.exit(4)
-        new_amount = args.amount
-    if new_amount < 100:
-        service_info['selectors'] = "{%s={weight=%s}}" % (traffic_version, float(new_amount)/100)
-    else:
-        new_amount = 100
-        service_info['default'] = traffic_version
-        service_info['selectors'] = None
-    r = a8_put('{}/v1/versions/{}'.format(args.a8_url, args.service),
-               args.a8_token,
-               json.dumps(service_info),
-               showcurl=args.debug)
-    fail_unless(r, 200)
-    if new_amount == 100:
-        print 'Transfer complete for {}: sending {}% of traffic to {}'.format(args.service, new_amount, traffic_version)
-    else:
-        print 'Transfer step for {}: diverting {}% of traffic from {} to {}'.format(args.service, new_amount, default_version, traffic_version)
-
-def traffic_abort(args):
-    r = a8_get('{}/v1/versions/{}'.format(args.a8_url, args.service), args.a8_token, showcurl=args.debug)
-    fail_unless(r, 200)
-    service_info = r.json()
-    if not service_info['selectors']:
-        print "Invalid state for abort operation"
-        sys.exit(5)
-    default_version = service_info.get('default')
-    if not default_version:
-        default_version = NO_VERSION
-    service_info['selectors'] = None
-    r = a8_put('{}/v1/versions/{}'.format(args.a8_url, args.service),
-               args.a8_token,
-               json.dumps(service_info),
-               showcurl=args.debug)
-    fail_unless(r, 200)
-    print 'Transfer aborted for {}: all traffic reverted to {}'.format(args.service, default_version)

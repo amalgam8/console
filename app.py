@@ -68,8 +68,6 @@ def delete_rule(id):
 @app.route('/api/v1/recipes', methods=["POST"])
 def post_recipe():
     payload = request.get_json()
-    print ">>>"
-    print json.dumps(payload)
     args = settings
     args.topology = payload["topology"]
     args.scenarios = payload["scenarios"]
@@ -77,7 +75,8 @@ def post_recipe():
     args.run_load_script = payload["load_script"]
     args.header = payload["header"]
     args.pattern = payload["header_pattern"]
-    return commands.run_recipe(args), 200
+    res = commands.run_recipe(args)
+    return jsonify(rules=res)
 
 @app.route('/api/v1/services')
 def get_services():
