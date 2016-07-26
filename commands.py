@@ -377,7 +377,6 @@ def run_recipe(args):
             import subprocess
             with open("/tmp/loadscript.sh", "w") as fp:
                 fp.write(args.run_load_script)
-            fp.close()
             subprocess.call(["chmod", "+x", "/tmp/loadscript.sh"])
             subprocess.call(['/tmp/loadscript.sh'])
         else:
@@ -394,7 +393,7 @@ def run_recipe(args):
         results = ac.check_assertions(checklist, continue_on_error=True)
 
         #clear_rules(args)
-
+        print json.dumps(results, indent=2)
         return results
 
         # for check in results:
