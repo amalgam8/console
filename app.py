@@ -91,6 +91,8 @@ def post_route():
     args.default = payload["default_version"]
     if payload.get('version_selectors'):
         args.selector = payload["version_selectors"].split(",")
+    else:
+        args.selector = None
 
     commands.set_routing(args)
     return "", 200
