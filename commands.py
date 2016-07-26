@@ -377,7 +377,8 @@ def run_recipe(args):
             import subprocess
             with open("/tmp/loadscript.sh", "w") as fp:
                 fp.write(args.run_load_script)
-            subprocess.call(['chmod +x /tmp/loadscript.sh'])
+            fp.close()
+            subprocess.call(["chmod", "+x", "/tmp/loadscript.sh"])
             subprocess.call(['/tmp/loadscript.sh'])
         else:
             print ('When done, press Enter key to continue to validation phase')

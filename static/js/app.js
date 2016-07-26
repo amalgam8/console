@@ -286,8 +286,7 @@ $(document).ready(function(){
       $('#collapseRecipe').collapse('hide');
     };
     this.runRecipe = function() {
-      console.log(this.recipe.topology.filename);
-      console.log(this.recipe.topology.data);
+      console.log(this.recipe.load_script.data);
 
       var data = {
         topology: this.recipe.topology.data,
