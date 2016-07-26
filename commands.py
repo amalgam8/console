@@ -264,7 +264,7 @@ def rules_list(args):
                             "abort_probability": value["abort_probability"],
                             "abort_code": value["return_code"]})
     return result_list
-    
+
 def set_rule(args):
     if not args.source or not args.destination or not args.header:
          print "You must specify --source, --destination, and --header"
@@ -348,32 +348,25 @@ def run_recipe(args):
     else:
         pattern = '*'
 
-    if not os.path.isfile(args.topology):
-        print u"Topology file {} not found".format(args.topology)
+    if not args.topology:
+        print u"Topology required"
         sys.exit(4)
 
-    if not os.path.isfile(args.scenarios):
-        print u"Failure scenarios file {} not found".format(args.scenarios)
+    if not args.scenarios:
+        print u"Failure scenarios required"
         sys.exit(4)
 
-    if args.checks and not os.path.isfile(args.checks):
-        print u"Checklist file {} not found".format(args.checks)
+    if args.checks and not args.checks:
+        print u"Checklist file required"
         sys.exit(4)
 
-    with open(args.topology) as fp:
-        app = json.load(fp)
-    topology = ApplicationGraph(app)
-    if args.debug:
-        print "Using topology:\n", topology
+    print args.topology
 
-    with open(args.scenarios) as fp:
-        scenarios = json.load(fp)
+    topology = ApplicationGraph(json.loads(args.topology))
+    scenarios = json.loads(args.scenarios)
+    checklist = json.loads(args.checks)
 
-    if args.checks:
-        with open(args.checks) as fp:
-            checklist = json.load(fp)
-
-    fg = A8FailureGenerator(topology, a8_url='{0}/v1/rules'.format(args.a8_url), a8_token=args.a8_token, 
+    fg = A8FailureGenerator(topology, a8_url='{0}/v1/rules'.format(args.a8_url), a8_token=args.a8_token,
                             header=header, pattern='.*?'+pattern, debug=args.debug)
     fg.setup_failures(scenarios)
     start_time = datetime.datetime.utcnow().isoformat()
@@ -382,8 +375,10 @@ def run_recipe(args):
     if args.checks:
         if args.run_load_script:
             import subprocess
-            print ">>>", args.run_load_script
-            subprocess.call([args.run_load_script])
+            with open("/tmp/loadscript.sh", "w") as fp:
+                fp.write(args.run_load_script)
+            subprocess.call(['chmod +x /tmp/loadscript.sh'])
+            subprocess.call(['/tmp/loadscript.sh'])
         else:
             print ('When done, press Enter key to continue to validation phase')
             a = sys.stdin.read(1)
@@ -396,9 +391,9 @@ def run_recipe(args):
         log_server = checklist.get('log_server', args.a8_log_server)
         ac = A8AssertionChecker(es_host=log_server, header=header, pattern=pattern, start_time=start_time, end_time=end_time, debug=args.debug)
         results = ac.check_assertions(checklist, continue_on_error=True)
-        
+
         #clear_rules(args)
-        
+
         return results
 
         # for check in results:

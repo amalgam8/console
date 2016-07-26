@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/slate/bootstrap.min.css" integrity="sha384-X9JiR5BtXUXiV6R3XuMyVGefFyy+18PHpBwaMfteb/vd2RrK6Gt4KPenkQyWLxCC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/css/bootstrap-slider.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.3/css/fileinput.min.css" charset="utf-8">
     <link rel="stylesheet" href="/css/custom.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -20,26 +21,27 @@
     <![endif]-->
   </head>
   <body>
-      <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Amalgam8</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li><a class="pagelink" href="#/routes">Routes</a></li>
-            <li><a class="pagelink" href="#/rules">Faults</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Amalgam8</a>
+          </div>
+          <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li><a class="pagelink" href="#/routes">Routing Rules</a></li>
+              <li><a class="pagelink" href="#/rules">Fault Rules</a></li>
+              <li><a class="pagelink" href="#/recipe">Recipe</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
       </div>
     </nav>
 
@@ -204,64 +206,6 @@
       </div>
     </div>
 
-    <div class="collapse" id="collapseRecipe">
-      <div class="well" style="margin-top:10px;">
-        <div class="container">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Recipe</h3>
-            </div>
-            <div class="panel-body">
-              <form class="form-horizontal" data-bind="with: recipe">
-                  <div class="form-group">
-                      <label for="topology" class="col-sm-2 control-label">Topology</label>
-                      <div class="col-sm-2">
-                        <input type="file" class="form-control" name="topology" data-bind="file: topology">
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="scenarios" class="col-sm-2 control-label">Scenarios</label>
-                      <div class="col-sm-2">
-                        <input type="file" class="form-control" name="scenarios" data-bind="file: scenarios">
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="checks" class="col-sm-2 control-label">Checks</label>
-                      <div class="col-sm-2">
-                        <input type="file" class="form-control" name="checks" data-bind="file: checks">
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="load_script" class="col-sm-2 control-label">Load Script</label>
-                      <div class="col-sm-2">
-                        <input type="file" class="form-control" name="scenarios" data-bind="file: load_script">
-                      </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="header" class="col-sm-2 control-label">Header</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" name="header" placeholder="header attribute" data-bind="value: header">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="pattern" class="col-sm-2 control-label">Header Pattern</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" name="pattern" placeholder="regex to match" data-bind="value: header_pattern">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-default" data-bind="click: $parent.runRecipe">Run It</button>
-                      <button class="btn btn-default" data-bind="click: $parent.cancelRecipe">Cancel</button>
-                    </div>
-                  </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="container">
       <!-- ko if: currentPage() == '/routes' -->
       <div class="panel panel-default">
@@ -306,7 +250,6 @@
           <h3 class="panel-title">
             Faults
             <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRule">Add Fault</button>
-            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: newRecipe">Run Recipe</button>
           </h3>
         </div>
         <table class="table">
@@ -345,6 +288,66 @@
         </table>
       </div>
       <!-- /ko -->
+
+      <!-- ko if: currentPage() == '/recipe' -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Recipe
+            <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: runRecipe">Run Recipe</button>
+          </h3>
+        </div>
+
+        <div class="panel-body">
+          <form class="form-horizontal" data-bind="with: recipe">
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="topology" class="control-label">Topology File</label>
+                  <input id="topology" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: topology.onSelected}">
+                  <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: topology.data, disable: !topology.data"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="scenarios" class="control-label">Scenarios File</label>
+                  <input id="scenarios" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: scenarios.onSelected}">
+                  <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: scenarios.data, disable: !scenarios.data"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="checks" class="control-label">Checks File</label>
+                  <input id="checks" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: checks.onSelected}">
+                  <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: checks.data, disable: !checks.data"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-8">
+                  <label for="load-script" class="control-label">Load Script File</label>
+                  <input id="load-script" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: load_script.onSelected}">
+                  <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: load_script.data, disable: !load_script.data"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="header" class="col-sm-2 control-label">Header</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" name="header" placeholder="header attribute" data-bind="value: header">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="pattern" class="col-sm-2 control-label">Header Pattern</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control" name="pattern" placeholder="regex to match" data-bind="value: header_pattern">
+                </div>
+              </div>
+          </form>
+        </div>
+      </div>
+      <!-- /ko -->
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -353,6 +356,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/bootstrap-slider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.3/js/fileinput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
     <script src="/vendor/knockout-es5.min.js" charset="utf-8"></script>
     <script src="/vendor/knockout.punches.min.js" charset="utf-8"></script>

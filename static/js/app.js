@@ -173,14 +173,38 @@ $(document).ready(function(){
 
   }
 
+  function FileVM() {
+    var self = this;
+    this.filename = "";
+    this.data = "";
+
+    this.onSelected = function(data, e) {
+      var reader  = new FileReader();
+      var f = e.target.files[0];
+
+      self.filename = f.name;
+      reader.onloadend = function (onloadend_e)
+      {
+         var result = reader.result;
+         self.data = result;
+      };
+
+      if(f)
+      {
+          reader.readAsText(f);
+      }
+    };
+
+    ko.track(this);
+  }
+
   function Recipe() {
       this.header = "Cookie";
       this.header_pattern = "";
-      this.topology = "";
-      this.scenarios = "";
-      this.checks = "";
-      this.load_script = "";
-
+      this.topology = new FileVM();
+      this.scenarios = new FileVM();
+      this.checks = new FileVM();
+      this.load_script = new FileVM();
       ko.track(this);
   }
 
@@ -262,11 +286,14 @@ $(document).ready(function(){
       $('#collapseRecipe').collapse('hide');
     };
     this.runRecipe = function() {
+      console.log(this.recipe.topology.filename);
+      console.log(this.recipe.topology.data);
+
       var data = {
-        topology: this.recipe.topology,
-        scenarios: this.recipe.scenarios,
-        checks: this.recipe.checks,
-        load_script: this.recipe.load_script,
+        topology: this.recipe.topology.data,
+        scenarios: this.recipe.scenarios.data,
+        checks: this.recipe.checks.data,
+        load_script: this.recipe.load_script.data,
         header: this.recipe.header,
         header_pattern: this.recipe.header_pattern
       }
@@ -337,9 +364,10 @@ $(document).ready(function(){
     self.rulesHash = 0;
 
     // connect up the Router - es5 properties not working so use observables
-    // TODO: selection of initial page is naive and only works with two pages. Fix later.
+    // TODO: selection of initial page is naive and only works with three pages. Fix later.
     var page = '/routes';
     if (window.location.hash == '#/rules') page = '/rules';
+    if (window.location.hash == '#/recipe') page = '/recipe';
     self.currentPage = ko.observable(page);
     self.changePage = function(page) {
       $('#collapseRules').collapse('hide');
