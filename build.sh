@@ -22,4 +22,4 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 #################################################################################
 # Build the console image
 #################################################################################
-docker build -t amalgam8/console:experimental $SCRIPTDIR
+docker build -t amalgam8/console:latest $SCRIPTDIR
