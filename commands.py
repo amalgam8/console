@@ -375,10 +375,7 @@ def run_recipe(args):
     if args.checks:
         if args.run_load_script:
             import subprocess
-            with open("/tmp/loadscript.sh", "w") as fp:
-                fp.write(args.run_load_script)
-            subprocess.call(['chmod +x /tmp/loadscript.sh'])
-            subprocess.call(['/tmp/loadscript.sh'])
+            subprocess.call(['bash', '-c', args.run_load_script])
         else:
             print ('When done, press Enter key to continue to validation phase')
             a = sys.stdin.read(1)
@@ -393,7 +390,7 @@ def run_recipe(args):
         results = ac.check_assertions(checklist, continue_on_error=True)
 
         #clear_rules(args)
-
+        print json.dumps(results, indent=2)
         return results
 
         # for check in results:
