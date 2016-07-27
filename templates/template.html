@@ -37,6 +37,7 @@
               <li><a class="pagelink" href="#/routes">Routing Rules</a></li>
               <li><a class="pagelink" href="#/rules">Fault Rules</a></li>
               <li><a class="pagelink" href="#/recipe">Recipe</a></li>
+              <li><a class="pagelink" href="#/testresults">Test Results</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="#"><i class="glyphicon glyphicon-cog"></i>Settings</a></li>
@@ -295,6 +296,7 @@
           <h3 class="panel-title">
             Recipe
             <button type="button" class="btn btn-success" style="margin-left: 20px;" data-bind="click: runRecipe">Run Recipe</button>
+            <span class="pull-right nudge-down" data-bind="if: recipe.running, css: 'blink text-success' "><i class="glyphicon glyphicon-heart"></i><em>Recipe running...</em></span>
           </h3>
         </div>
 
@@ -303,7 +305,7 @@
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="topology" class="control-label">Topology File</label>
-                  <input id="topology" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: topology.onSelected}">
+                  <input id="topology" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: topology.onSelected}">
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: topology.data, disable: !topology.data"></textarea>
                 </div>
               </div>
@@ -311,7 +313,7 @@
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="scenarios" class="control-label">Scenarios File</label>
-                  <input id="scenarios" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: scenarios.onSelected}">
+                  <input id="scenarios" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: scenarios.onSelected}">
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: scenarios.data, disable: !scenarios.data"></textarea>
                 </div>
               </div>
@@ -319,7 +321,7 @@
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="checks" class="control-label">Checks File</label>
-                  <input id="checks" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: checks.onSelected}">
+                  <input id="checks" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: checks.onSelected}">
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: checks.data, disable: !checks.data"></textarea>
                 </div>
               </div>
@@ -327,7 +329,7 @@
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="load-script" class="control-label">Load Script File</label>
-                  <input id="load-script" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-bind="event: {change: load_script.onSelected}">
+                  <input id="load-script" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: load_script.onSelected}">
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: load_script.data, disable: !load_script.data"></textarea>
                 </div>
               </div>
@@ -345,6 +347,53 @@
                 </div>
               </div>
           </form>
+        </div>
+      </div>
+      <!-- /ko -->
+
+      <!-- ko if: currentPage() == '/testresults' -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Test Results</h3>
+        </div>
+        <div class="panel-body">
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <!-- ko foreach: testResults -->
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="heading-{{id}}">
+                <h4 class="panel-title">
+                  <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{id}}" aria-expanded="true" aria-controls="{{id}}">
+                    Test @ {{ header() }}: Duration {{ elapsed_time }} seconds
+                  </a>
+                </h4>
+              </div>
+              <div id="{{id}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{id}}">
+                <div class="panel-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Assertion Name</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Result</th>
+                        <th>Error Message</th>
+                      </tr>
+                    </thead>
+                    <tbody data-bind="foreach: results">
+                      <tr>
+                        <td>{{name}}</td>
+                        <td>{{source}}</td>
+                        <td>{{dest}}</td>
+                        <td>{{result ? "true" : "false"}}</td>
+                        <td>{{errormsg}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- /ko -->
+          </div>
         </div>
       </div>
       <!-- /ko -->

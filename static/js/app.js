@@ -199,6 +199,7 @@ $(document).ready(function(){
   }
 
   function Recipe() {
+      this.running = false;
       this.header = "Cookie";
       this.header_pattern = "";
       this.topology = new FileVM();
@@ -208,10 +209,24 @@ $(document).ready(function(){
       ko.track(this);
   }
 
+  function TestResult() {
+    this.id = Date.now();
+    this.start_time = 0;
+    this.end_time = 0;
+    this.elapsed_time = 0;
+    this.results = [];
+
+    this.header = function() {
+      return (new Date(this.start_time)).toString();
+    };
+  }
+
   function viewModel() {
     var self=this;
     this.selectedRule = new Rule({});
     this.recipe = new Recipe();
+
+    this.testResults = [];
 
     this.services = [];
     this.rules = [];
@@ -286,7 +301,17 @@ $(document).ready(function(){
       $('#collapseRecipe').collapse('hide');
     };
     this.runRecipe = function() {
-      console.log(this.recipe.load_script.data);
+      this.recipe.running = true;
+      $.notify({
+        // options
+        message: 'Uploading &amp; Running Recipe...'
+      },{
+        // settings
+        type: 'warning'
+      });
+
+      var testResult = new TestResult();
+      testResult.start_time = Date.now();
 
       var data = {
         topology: this.recipe.topology.data,
@@ -302,7 +327,19 @@ $(document).ready(function(){
         data: data
       }
       $http.request(config).then(function(res) {
-        console.log(res);
+        self.recipe.running = false;
+        $.notify({
+          // options
+          message: 'Recipe Test Resuls posted...'
+        },{
+          // settings
+          type: 'warning'
+        });
+
+        testResult.end_time = Date.now();
+        testResult.elapsed_time = Math.round((testResult.end_time - testResult.start_time) / 1000);
+        testResult.results = res.data.rules;
+        self.testResults.unshift(testResult);
       });
     };
 
@@ -367,6 +404,8 @@ $(document).ready(function(){
     var page = '/routes';
     if (window.location.hash == '#/rules') page = '/rules';
     if (window.location.hash == '#/recipe') page = '/recipe';
+    if (window.location.hash == '#/testresults') page = '/testresults';
+
     self.currentPage = ko.observable(page);
     self.changePage = function(page) {
       $('#collapseRules').collapse('hide');
@@ -389,7 +428,7 @@ $(document).ready(function(){
           services.push(new Service(service));
         });
 
-        services.sort(function(a,b) { return a.name > b.name;});
+        services.sort(function(a,b) { return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);});
 
         //
         // IMPERFECT diff function. We take the sorted list of services, convert to JSON, and do a hash.
@@ -412,7 +451,7 @@ $(document).ready(function(){
           rules.push(new Rule(rule));
         });
 
-        rules.sort(function(a,b) { return a.source > b.source;});
+        rules.sort(function(a,b) { return a.source > b.source ? 1 : (a.source < b.source ? -1 : 0);});
 
         //
         // IMPERFECT diff function. We take the sorted list of rules, convert to JSON, and do a hash.
