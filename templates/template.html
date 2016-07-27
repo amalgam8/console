@@ -327,6 +327,7 @@
                 </div>
               </div>
 
+              <!--
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="load-script" class="control-label">Load Script File</label>
@@ -334,6 +335,7 @@
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: load_script.data, disable: !load_script.data"></textarea>
                 </div>
               </div>
+              -->
 
               <div class="form-group">
                 <label for="header" class="col-sm-2 control-label">Header</label>
@@ -385,7 +387,7 @@
                         <td>{{name}}</td>
                         <td>{{source}}</td>
                         <td>{{dest}}</td>
-                        <td>{{result ? "true" : "false"}}</td>
+                        <td>{{result ? "PASS" : "FAIL"}}</td>
                         <td>{{errormsg}}</td>
                       </tr>
                     </tbody>

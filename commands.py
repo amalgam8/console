@@ -372,28 +372,25 @@ def run_recipe(args):
     start_time = datetime.datetime.utcnow().isoformat()
     print start_time
     print 'Inject test requests with HTTP header %s matching the pattern %s' % (header, pattern)
-    if args.checks:
-        if args.run_load_script:
-            import subprocess
-            with open("/tmp/loadscript.sh", "w") as fp:
-                fp.write(args.run_load_script)
-            subprocess.call(["chmod", "+x", "/tmp/loadscript.sh"])
-            subprocess.call(['/tmp/loadscript.sh'])
-        else:
-            print ('When done, press Enter key to continue to validation phase')
-            a = sys.stdin.read(1)
-        #sleep for 3sec to make sure all logs reach elasticsearch
-        time.sleep(3)
+
+    return json.dumps({ "start_time": start_time, "header": header, "pattern": pattern, "checks": checklist })
+        
+def validate_recipe(args):
+        checklist = args.checks
+
+        time.sleep(15)
         end_time=datetime.datetime.utcnow().isoformat()
         print end_time
         #sleep for some more time to make sure all logs have been flushed
         time.sleep(5)
         log_server = checklist.get('log_server', args.a8_log_server)
-        ac = A8AssertionChecker(es_host=log_server, header=header, pattern=pattern, start_time=start_time, end_time=end_time, debug=args.debug)
+        print "log_server: %s" % log_server
+        log_server = args.a8_log_server
+        ac = A8AssertionChecker(es_host=log_server, header=args.header, pattern=args.pattern, start_time=args.start_time, end_time=end_time, debug=args.debug)
         results = ac.check_assertions(checklist, continue_on_error=True)
 
         clear_rules(args)
-        print json.dumps(results, indent=2)
+        #print json.dumps(results, indent=2)
         return results
 
         # for check in results:

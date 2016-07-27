@@ -301,6 +301,7 @@ $(document).ready(function(){
       $('#collapseRecipe').collapse('hide');
     };
     this.runRecipe = function() {
+      /*
       this.recipe.running = true;
       $.notify({
         // options
@@ -309,7 +310,7 @@ $(document).ready(function(){
         // settings
         type: 'warning'
       });
-
+      */
       var testResult = new TestResult();
       testResult.start_time = Date.now();
 
@@ -317,7 +318,7 @@ $(document).ready(function(){
         topology: this.recipe.topology.data,
         scenarios: this.recipe.scenarios.data,
         checks: this.recipe.checks.data,
-        load_script: this.recipe.load_script.data,
+        //load_script: this.recipe.load_script.data,
         header: this.recipe.header,
         header_pattern: this.recipe.header_pattern
       }
@@ -327,19 +328,38 @@ $(document).ready(function(){
         data: data
       }
       $http.request(config).then(function(res) {
-        self.recipe.running = false;
+        alert('Inject test requests with HTTP header %s matching the pattern %s. Press OK when ready to continue to validation phase');
+
+        self.recipe.running = true;
         $.notify({
           // options
-          message: 'Recipe Test Resuls posted...'
+          message: 'Validating Recipe...'
         },{
           // settings
           type: 'warning'
         });
 
-        testResult.end_time = Date.now();
-        testResult.elapsed_time = Math.round((testResult.end_time - testResult.start_time) / 1000);
-        testResult.results = res.data.rules;
-        self.testResults.unshift(testResult);
+        config = {
+            url: '/api/v1/recipe-results',
+            method: 'post',
+            data: JSON.parse(res.data.context)
+        }
+        
+        $http.request(config).then(function(res) {
+          self.recipe.running = false;
+          $.notify({
+            // options
+            message: 'Recipe Test Results Posted...'
+          },{
+            // settings
+            type: 'warning'
+          });
+
+          testResult.end_time = Date.now();
+          testResult.elapsed_time = Math.round((testResult.end_time - testResult.start_time) / 1000);
+          testResult.results = res.data.rules;
+          self.testResults.unshift(testResult);
+        });
       });
     };
 

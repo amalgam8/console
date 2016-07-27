@@ -31,6 +31,7 @@ settings = {
     'a8_token': os.getenv('A8_CONTROLLER_TOKEN', 'local'),
     'a8_registry_url': os.getenv('A8_REGISTRY_URL', None),
     'a8_registry_token': os.getenv('A8_REGISTRY_TOKEN', None),
+    'a8_log_server': os.getenv('A8_LOG_SERVER', 'localhost:30200'),
     'json': True
 }
 settings = dotdict(settings)
@@ -78,10 +79,22 @@ def post_recipe():
     args.topology = payload["topology"]
     args.scenarios = payload["scenarios"]
     args.checks = payload["checks"]
-    args.run_load_script = payload["load_script"]
+    #args.run_load_script = payload["load_script"]
     args.header = payload["header"]
     args.pattern = payload["header_pattern"]
     res = commands.run_recipe(args)
+    return jsonify(context=res)
+
+@app.route('/api/v1/recipe-results', methods=["POST"])
+def get_recipe_results():
+    payload = request.get_json()
+    #print json.dumps(payload, indent=2)
+    args = settings
+    args.start_time = payload["start_time"]
+    args.header = payload["header"]
+    args.pattern = payload["pattern"]
+    args.checks = payload["checks"]
+    res = commands.validate_recipe(args)
     return jsonify(rules=res)
 
 @app.route('/api/v1/services')
