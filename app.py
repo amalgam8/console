@@ -58,6 +58,12 @@ def post_rule():
     commands.set_rule(args)
     return "", 200
 
+@app.route('/api/v1/rules', methods=["DELETE"])
+def delete_rules():
+    args = settings
+    commands.clear_rules(args)
+    return "", 200
+
 @app.route('/api/v1/rules/<id>', methods=["DELETE"])
 def delete_rule(id):
     args = settings

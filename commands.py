@@ -392,7 +392,7 @@ def run_recipe(args):
         ac = A8AssertionChecker(es_host=log_server, header=header, pattern=pattern, start_time=start_time, end_time=end_time, debug=args.debug)
         results = ac.check_assertions(checklist, continue_on_error=True)
 
-        #clear_rules(args)
+        clear_rules(args)
         print json.dumps(results, indent=2)
         return results
 

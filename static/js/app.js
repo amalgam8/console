@@ -391,7 +391,26 @@ $(document).ready(function(){
       $http.request(config).then(function(res) {
         // TODO: check status = 200
       });
-    }
+    };
+
+    this.deleteRules = function() {
+      $.notify({
+      	// options
+      	message: 'Deleting all fault rules...'
+      },{
+      	// settings
+      	type: 'danger'
+      });
+
+      var config = {
+        url: '/api/v1/rules',
+        method: 'delete'
+      }
+      $http.request(config).then(function(res) {
+        // TODO: check status = 200
+      });
+    };
+
     ko.track(this);
 
     // hash values of lists to be used to compare with AJAX responses
