@@ -311,7 +311,7 @@
                     <label class="input-group-btn">
                       <span class="btn btn-primary"  data-bind="event: {change: topology.onSelected}"><i class="glyphicon glyphicon-folder-open"></i>Browse &hellip; <input type="file" style="display: none;"></span>
                     </label>
-                    <span class="form-control" data-bind="text: topology.filename"></span>
+                    <span class="form-control"><i class="glyphicon glyphicon-file" data-bind="visible: topology.filename"></i> {{ topology.filename }}</span>
                   </div>
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: topology.data, disable: !topology.data"></textarea>
                 </div>
@@ -324,7 +324,7 @@
                     <label class="input-group-btn">
                       <span class="btn btn-primary"  data-bind="event: {change: scenarios.onSelected}"><i class="glyphicon glyphicon-folder-open"></i>Browse &hellip; <input type="file" style="display: none;"></span>
                     </label>
-                    <span class="form-control" data-bind="text: scenarios.filename"></span>
+                    <span class="form-control"><i class="glyphicon glyphicon-file" data-bind="visible: scenarios.filename"></i> {{ scenarios.filename }}</span>
                   </div>
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: scenarios.data, disable: !scenarios.data"></textarea>
                 </div>
@@ -337,7 +337,7 @@
                     <label class="input-group-btn">
                       <span class="btn btn-primary"  data-bind="event: {change: checks.onSelected}"><i class="glyphicon glyphicon-folder-open"></i>Browse &hellip; <input type="file" style="display: none;"></span>
                     </label>
-                    <span class="form-control" data-bind="text: checks.filename"></span>
+                    <span class="form-control"><i class="glyphicon glyphicon-file" data-bind="visible: checks.filename"></i> {{ checks.filename }}</span>
                   </div>
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: checks.data, disable: !checks.data"></textarea>
                 </div>
