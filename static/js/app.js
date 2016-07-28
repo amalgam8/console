@@ -51,8 +51,9 @@ $(document).ready(function(){
   /*
    * cheap and dirty jQuery hash based router
    */
-  function Router(changePageFn, pagelinkClass = ".pagelink")
+  function Router(changePageFn, pagelinkClass)
   {
+    pagelinkClass = pagelinkClass || ".pagelink";
     var self = this;
     self.changePage = changePageFn; // callback
 
