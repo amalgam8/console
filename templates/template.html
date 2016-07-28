@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/slate/bootstrap.min.css" integrity="sha384-X9JiR5BtXUXiV6R3XuMyVGefFyy+18PHpBwaMfteb/vd2RrK6Gt4KPenkQyWLxCC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/css/bootstrap-slider.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.3/css/fileinput.min.css" charset="utf-8">
     <link rel="stylesheet" href="/css/custom.css">
     <link rel="shortcut icon" href="/favicon.ico?v=2">
 
@@ -304,10 +303,16 @@
 
         <div class="panel-body">
           <form class="form-horizontal" data-bind="with: recipe">
+
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="topology" class="control-label">Topology File</label>
-                  <input id="topology" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: topology.onSelected}">
+                  <div class="input-group"  id="topology">
+                    <label class="input-group-btn">
+                      <span class="btn btn-primary"  data-bind="event: {change: topology.onSelected}"><i class="glyphicon glyphicon-folder-open"></i>Browse &hellip; <input type="file" style="display: none;"></span>
+                    </label>
+                    <span class="form-control" data-bind="text: topology.filename"></span>
+                  </div>
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: topology.data, disable: !topology.data"></textarea>
                 </div>
               </div>
@@ -315,7 +320,12 @@
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="scenarios" class="control-label">Scenarios File</label>
-                  <input id="scenarios" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: scenarios.onSelected}">
+                  <div class="input-group"  id="scenarios">
+                    <label class="input-group-btn">
+                      <span class="btn btn-primary"  data-bind="event: {change: scenarios.onSelected}"><i class="glyphicon glyphicon-folder-open"></i>Browse &hellip; <input type="file" style="display: none;"></span>
+                    </label>
+                    <span class="form-control" data-bind="text: scenarios.filename"></span>
+                  </div>
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: scenarios.data, disable: !scenarios.data"></textarea>
                 </div>
               </div>
@@ -323,7 +333,12 @@
               <div class="form-group">
                 <div class="col-sm-8">
                   <label for="checks" class="control-label">Checks File</label>
-                  <input id="checks" type="file" class="file form-control" data-show-upload="false" data-show-preview="false" data-show-caption="true" data-bind="event: {change: checks.onSelected}">
+                  <div class="input-group" id="checks">
+                    <label class="input-group-btn">
+                      <span class="btn btn-primary"  data-bind="event: {change: checks.onSelected}"><i class="glyphicon glyphicon-folder-open"></i>Browse &hellip; <input type="file" style="display: none;"></span>
+                    </label>
+                    <span class="form-control" data-bind="text: checks.filename"></span>
+                  </div>
                   <textarea class="form-control col-sm-8 nudge-down" rows="8" data-bind="textInput: checks.data, disable: !checks.data"></textarea>
                 </div>
               </div>
@@ -409,7 +424,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/7.1.0/bootstrap-slider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.3/js/fileinput.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.0/knockout-min.js"></script>
     <script src="/vendor/knockout-es5.min.js" charset="utf-8"></script>
