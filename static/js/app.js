@@ -329,7 +329,7 @@ $(document).ready(function(){
         data: data
       }
       $http.request(config).then(function(res) {
-        var msg = 'Inject test requests with HTTP header <strong><em>' + config.data.header + '</em></strong> matching the pattern <strong><em>' + config.data.header_pattern + '</em></strong>. Press OK when ready to continue to validation phase';
+        var msg = 'Inject test requests with HTTP header <strong><em>' + config.data.header + '</em></strong> matching the pattern <strong><em>' + config.data.header_pattern + '</em></strong>. Press <strong><em>Validate Recipe</em></strong> when ready to continue to validation phase';
         bootbox.alert({
           message: msg,
           title: 'Inject Test Requests',
