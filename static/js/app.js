@@ -328,38 +328,44 @@ $(document).ready(function(){
         data: data
       }
       $http.request(config).then(function(res) {
-        alert('Inject test requests with HTTP header %s matching the pattern %s. Press OK when ready to continue to validation phase');
-
-        self.recipe.running = true;
-        $.notify({
-          // options
-          message: 'Validating Recipe...'
-        },{
-          // settings
-          type: 'warning'
+        var msg = 'Inject test requests with HTTP header <strong><em>' + config.data.header + '</em></strong> matching the pattern <strong><em>' + config.data.header_pattern + '</em></strong>. Press OK when ready to continue to validation phase';
+        bootbox.alert({
+          message: msg,
+          title: 'Inject Test Requests',
+          callback: validateRecipe,
+          closeButton: false,
+          buttons: {
+            'ok': {
+              label: 'Validate Recipe',
+              className: 'btn-info'
+            }
+          }
         });
 
-        config = {
-            url: '/api/v1/recipe-results',
-            method: 'post',
-            data: JSON.parse(res.data.context)
-        }
-        
-        $http.request(config).then(function(res) {
-          self.recipe.running = false;
-          $.notify({
-            // options
-            message: 'Recipe Test Results Posted...'
-          },{
-            // settings
-            type: 'warning'
+        function validateRecipe() {
+          self.recipe.running = true;
+          config = {
+              url: '/api/v1/recipe-results',
+              method: 'post',
+              data: JSON.parse(res.data.context)
+          }
+
+          $http.request(config).then(function(res) {
+            self.recipe.running = false;
+            $.notify({
+              // options
+              message: 'Recipe Test Results Posted...'
+            },{
+              // settings
+              type: 'success'
+            });
+
+            testResult.end_time = Date.now();
+            testResult.elapsed_time = Math.round((testResult.end_time - testResult.start_time) / 1000);
+            testResult.results = res.data.rules;
+            self.testResults.unshift(testResult);
           });
-
-          testResult.end_time = Date.now();
-          testResult.elapsed_time = Math.round((testResult.end_time - testResult.start_time) / 1000);
-          testResult.results = res.data.rules;
-          self.testResults.unshift(testResult);
-        });
+        }
       });
     };
 
