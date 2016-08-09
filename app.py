@@ -27,10 +27,10 @@ class dotdict(dict):
 
 settings = {
     'debug': os.getenv('A8_DEBUG')=='1',
-    'a8_url': os.getenv('A8_CONTROLLER_URL', 'http://localhost:31200'),
-    'a8_token': os.getenv('A8_CONTROLLER_TOKEN', 'local'),
-    'a8_registry_url': os.getenv('A8_REGISTRY_URL', None),
-    'a8_registry_token': os.getenv('A8_REGISTRY_TOKEN', None),
+    'a8_controller_url': os.getenv('A8_CONTROLLER_URL', 'http://localhost:31200'),
+    'a8_controller_token': os.getenv('A8_CONTROLLER_TOKEN', ''),
+    'a8_registry_url': os.getenv('A8_REGISTRY_URL', 'http://localhost:31300'),
+    'a8_registry_token': os.getenv('A8_REGISTRY_TOKEN', ''),
     'a8_log_server': os.getenv('A8_LOG_SERVER', 'localhost:30200'),
     'json': True
 }

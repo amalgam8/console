@@ -5,4 +5,4 @@ flask_bootstrap
 prettytable
 parse
 decorator
-a8ctl==0.2.2
+-e git://github.com/amalgam8/a8ctl@master#egg=a8ctl

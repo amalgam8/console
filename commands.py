@@ -146,12 +146,6 @@ def fail_unless(response, code_or_codes):
         print response.text
         sys.exit(3)
 
-def get_registry_credentials(tenant_info, args):
-    registry = tenant_info["credentials"]["registry"]
-    registry_url = registry["url"] if args.a8_registry_url is None else args.a8_registry_url
-    registry_token = registry["token"] if args.a8_registry_token is None else args.a8_registry_token
-    return registry_url, "Bearer " + registry_token
-
 def is_active(service, default_version, instance_list):
     for instance in instance_list:
         version = instance["metadata"]["version"] if "metadata" in instance and "version" in instance["metadata"] else NO_VERSION
@@ -169,10 +163,10 @@ SELECTOR_PARSER = compile("{version}=#{rule}#") # TODO: tolerate white-space in 
 def service_list(args):
     res = []
 
-    r = a8_get('{}/v1/tenants'.format(args.a8_url), args.a8_token, showcurl=args.debug)
+    r = a8_get('{}/v1/tenants'.format(args.a8_controller_url), args.a8_controller_token, showcurl=args.debug)
     fail_unless(r, 200)
     tenant_info = r.json()
-    registry_url, registry_token = get_registry_credentials(tenant_info, args)
+    registry_url, registry_token = args.a8_registry_url, args.a8_registry_token
     r = a8_get('{0}/api/v1/services'.format(registry_url), registry_token, showcurl=args.debug)
     fail_unless(r, 200)
     service_list = r.json()["services"]
@@ -232,23 +226,23 @@ def set_routing(args):
             selector_list.append(selector.replace("(","={").replace(")","}"))
         routing_request['selectors'] = "{" + ",".join(selector_list) + "}"
 
-    r = a8_put('{}/v1/versions/{}'.format(args.a8_url, args.service),
-               args.a8_token,
+    r = a8_put('{}/v1/versions/{}'.format(args.a8_controller_url, args.service),
+               args.a8_controller_token,
                json.dumps(routing_request),
                showcurl=args.debug)
     fail_unless(r, 200)
     print 'Set routing rules for microservice', args.service
 
 def delete_routing(args):
-    r = a8_delete('{}/v1/versions/{}'.format(args.a8_url, args.service),
-               args.a8_token,
+    r = a8_delete('{}/v1/versions/{}'.format(args.a8_controller_url, args.service),
+               args.a8_controller_token,
                showcurl=args.debug)
     fail_unless(r, 200)
     print 'Deleted routing rules for microservice', args.service
 
 def rules_list(args):
-    r = a8_get('{0}/v1/rules'.format(args.a8_url),
-               args.a8_token,
+    r = a8_get('{0}/v1/rules'.format(args.a8_controller_url),
+               args.a8_controller_token,
                showcurl=args.debug)
     fail_unless(r, 200)
     response = r.json()
@@ -296,23 +290,23 @@ def set_rule(args):
 
     payload = {"rules": [rule_request]}
 
-    r = a8_post('{}/v1/rules'.format(args.a8_url),
-                args.a8_token,
+    r = a8_post('{}/v1/rules'.format(args.a8_controller_url),
+                args.a8_controller_token,
                 json.dumps(payload),
                 showcurl=args.debug)
     fail_unless(r, 201)
     print 'Set fault injection rule between %s and %s' % (args.source, args.destination)
 
 def clear_rules(args):
-    r = a8_delete('{}/v1/rules'.format(args.a8_url),
-                  args.a8_token,
+    r = a8_delete('{}/v1/rules'.format(args.a8_controller_url),
+                  args.a8_controller_token,
                   showcurl=args.debug)
     fail_unless(r, 200)
     print 'Cleared fault injection rules from all microservices'
 
 def delete_rule(args):
-    r = a8_delete('{}/v1/rules?id={}'.format(args.a8_url, args.rule_id),
-                  args.a8_token,
+    r = a8_delete('{}/v1/rules?id={}'.format(args.a8_controller_url, args.rule_id),
+                  args.a8_controller_token,
                   showcurl=args.debug)
     fail_unless(r, 200)
     print 'Deleted fault injection rule with id: %s' % args.rule_id
@@ -366,7 +360,7 @@ def run_recipe(args):
     scenarios = json.loads(args.scenarios)
     checklist = json.loads(args.checks)
 
-    fg = A8FailureGenerator(topology, a8_url='{0}/v1/rules'.format(args.a8_url), a8_token=args.a8_token,
+    fg = A8FailureGenerator(topology, a8_controller_url='{0}/v1/rules'.format(args.a8_controller_url), a8_controller_token=args.a8_controller_token,
                             header=header, pattern='.*?'+pattern, debug=args.debug)
     fg.setup_failures(scenarios)
     start_time = datetime.datetime.utcnow().isoformat()
