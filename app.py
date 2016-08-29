@@ -68,7 +68,7 @@ def delete_rules():
 @app.route('/api/v1/rules/<id>', methods=["DELETE"])
 def delete_rule(id):
     args = settings
-    args.rule_id = id
+    args.id = id
     commands.delete_rule(args)
     return "", 200
 
