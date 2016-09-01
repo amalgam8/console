@@ -90,9 +90,10 @@ def get_recipe_results():
     payload = request.get_json()
     #print json.dumps(payload, indent=2)
     args = settings
-    args.start_time = payload["start_time"]
-    args.header = payload["header"]
-    args.pattern = payload["pattern"]
+    #args.start_time = payload["start_time"]
+    #args.header = payload["header"]
+    #args.pattern = payload["pattern"]
+    args.trace_log_value = payload["trace_log_value"]
     args.checks = payload["checks"]
     res = commands.validate_recipe(args)
     return jsonify(rules=res)

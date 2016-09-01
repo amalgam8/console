@@ -334,7 +334,7 @@ def service_list(args):
         x['name'] = service
         x['href'] = '{0}/api/v1/services/{1}'.format(registry_url, service)
         x['versions'] = []
-        x['default_version'] = NO_VERSION
+        x['default_version'] = ""
         x['selectors'] = ""
 
         r = a8_get(x['href'], registry_token, showcurl=args.debug)
@@ -350,9 +350,9 @@ def service_list(args):
 
         # get routing information for each service
 
-        routing_rules = service_rules[service]
+        routing_rules = service_rules.get(service, [])
         default, selectors = get_routes(routing_rules)
-        x['default_version'] = default if default else NO_VERSION
+        x['default_version'] = default if default else ""
         x['selectors'] = ", ".join(selectors)
         x['is_active'] = is_active(service, x['default_version'], instance_list)
         res.append(x)
@@ -698,7 +698,8 @@ def run_recipe(args):
     print start_time
     print 'Inject test requests with HTTP header %s matching the pattern %s' % (header, pattern)
 
-    return json.dumps({ "start_time": start_time, "header": header, "pattern": pattern, "checks": checklist })
+    #return json.dumps({ "start_time": start_time, "header": header, "pattern": pattern, "checks": checklist })
+    return json.dumps({ "trace_log_value": fg.get_id(), "checks": checklist })
         
 def validate_recipe(args):
         checklist = args.checks
@@ -711,7 +712,8 @@ def validate_recipe(args):
         log_server = checklist.get('log_server', args.a8_log_server)
         print "log_server: %s" % log_server
         log_server = args.a8_log_server
-        ac = A8AssertionChecker(es_host=log_server, header=args.header, pattern=args.pattern, start_time=args.start_time, end_time=end_time, debug=args.debug)
+        #ac = A8AssertionChecker(es_host=log_server, header=args.header, pattern=args.pattern, start_time=args.start_time, end_time=end_time, debug=args.debug)
+        ac = A8AssertionChecker(es_host=log_server, trace_log_value=args.trace_log_value, index=["_all"])      
         results = ac.check_assertions(checklist, continue_on_error=True)
 
         clear_rules(args)
